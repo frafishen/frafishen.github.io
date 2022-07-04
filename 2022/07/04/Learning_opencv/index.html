@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>入門opencv | 沈倢妤的空間</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="希望最近的專案可以用到影像識別的技術，所以利用小白的影片稍微入門了python 的opencv 讀取圖片12345678910111213141516import randomimport cv2import numpy as np#讀進圖片img &#x3D; cv2.imread(&quot;img&#x2F;colorcolor.jpg&quot;)#改變圖片絕對大小img &#x3D; cv2.resize(img,">
+<meta property="og:type" content="article">
+<meta property="og:title" content="入門opencv">
+<meta property="og:url" content="https://frafishen.github.io/2022/07/04/Learning_opencv/index.html">
+<meta property="og:site_name" content="沈倢妤的空間">
+<meta property="og:description" content="希望最近的專案可以用到影像識別的技術，所以利用小白的影片稍微入門了python 的opencv 讀取圖片12345678910111213141516import randomimport cv2import numpy as np#讀進圖片img &#x3D; cv2.imread(&quot;img&#x2F;colorcolor.jpg&quot;)#改變圖片絕對大小img &#x3D; cv2.resize(img,">
+<meta property="og:locale" content="zh_TW">
+<meta property="article:published_time" content="2022-07-03T21:34:12.000Z">
+<meta property="article:modified_time" content="2022-07-03T22:13:59.992Z">
+<meta property="article:author" content="Jenny Shen">
+<meta property="article:tag" content="opencv">
+<meta property="article:tag" content="python">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="沈倢妤的空間" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">沈倢妤的空間</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜尋"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://frafishen.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Learning_opencv" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/07/04/Learning_opencv/" class="article-date">
+  <time datetime="2022-07-03T21:34:12.000Z" itemprop="datePublished">2022-07-04</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      入門opencv
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>希望最近的專案可以用到影像識別的技術，所以利用<a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=xjrykYpaBBM">小白的影片</a>稍微入門了python 的opencv</p>
+<h4 id="讀取圖片"><a href="#讀取圖片" class="headerlink" title="讀取圖片"></a>讀取圖片</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> random</span><br><span class="line"><span class="keyword">import</span> cv2</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line"><span class="comment">#讀進圖片</span></span><br><span class="line">img = cv2.imread(<span class="string">&quot;img/colorcolor.jpg&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">#改變圖片絕對大小</span></span><br><span class="line">img = cv2.resize(img, (<span class="number">300</span>,<span class="number">300</span>))</span><br><span class="line"><span class="comment">#以倍數來改變圖片大小，前面兩個為0，後面x和y的倍數</span></span><br><span class="line">img = cv2.resize(img, (<span class="number">0</span>, <span class="number">0</span>), fx=<span class="number">0.5</span>, fy=<span class="number">0.5</span>)</span><br><span class="line"><span class="comment">#顯示圖片，但只有這個會會直接消失</span></span><br><span class="line">cv2.imshow(<span class="string">&quot;img&quot;</span>, img)</span><br><span class="line"><span class="comment">#等待多少毫秒，0為一直顯示</span></span><br><span class="line">cv2.waitKey(<span class="number">0</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="讀取影片"><a href="#讀取影片" class="headerlink" title="讀取影片"></a>讀取影片</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#讀進影片</span></span><br><span class="line">cap = cv2.VideoCapture(<span class="string">&quot;thumb.mp4&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">#.VideoCapture()參數不一定要放路徑，也可以放鏡頭編號</span></span><br><span class="line">cap = cv2.VideoCapture(<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">#每幀停頓1毫秒，沒有下一幀就結束播放</span></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    <span class="comment">#.read()這個函式會回傳兩個值，ret為一布林值：讀取下一幀真有沒有成功，frame：如果有成功，則儲存下一幀</span></span><br><span class="line">    ret, frame =  cap.read() </span><br><span class="line">    frame = cv2.resize(frame, (<span class="number">0</span>, <span class="number">0</span>), fx = <span class="number">1.2</span>, fy = <span class="number">1.2</span>)</span><br><span class="line">    <span class="keyword">if</span> ret:</span><br><span class="line">        cv2.imshow(<span class="string">&quot;video&quot;</span>, frame)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="comment"># cv2.waitKey(1)</span></span><br><span class="line">    <span class="comment">#.waitKey(()會回傳鍵盤值，按下q即結束影片</span></span><br><span class="line">    <span class="keyword">if</span> cv2.waitKey(<span class="number">10</span>) == <span class="built_in">ord</span>(<span class="string">&#x27;q&#x27;</span>):</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="剖析結構"><a href="#剖析結構" class="headerlink" title="剖析結構"></a>剖析結構</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">img = cv2.imread(<span class="string">&quot;img/colorcolor.jpg&quot;</span>)</span><br><span class="line"><span class="comment"># 型態為numpy下的多維陣列(速度很快的列表)</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">type</span>(img))</span><br><span class="line"><span class="built_in">print</span>(img.shape)</span><br><span class="line"><span class="comment"># (1015, 700,3) 三維陣列 (B, G, R)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 創建多維陣列，後面的參數維每個值得大小，0~255一共256個值 = 8 個units</span></span><br><span class="line">img = np.empty((<span class="number">300</span>, <span class="number">300</span>, <span class="number">3</span>), np.uint8)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> row <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">300</span>):</span><br><span class="line">    <span class="keyword">for</span> col <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">300</span>):</span><br><span class="line">        <span class="comment"># img[row][col] = [0, 255, 0]</span></span><br><span class="line">        <span class="comment">#也可以random 歐</span></span><br><span class="line">        img[row][col] = [random.randint(<span class="number">0</span>, <span class="number">255</span>), random.randint(<span class="number">0</span>, <span class="number">255</span>), random.randint(<span class="number">0</span>, <span class="number">255</span>)]</span><br><span class="line"></span><br><span class="line">cv2.imshow(<span class="string">&quot;img&quot;</span>, img)</span><br><span class="line">cv2.waitKey(<span class="number">0</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="切分圖片"><a href="#切分圖片" class="headerlink" title="切分圖片"></a>切分圖片</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">img = cv2.imread(<span class="string">&quot;img/colorcolor.jpg&quot;</span>)</span><br><span class="line">newImg = img[:<span class="number">150</span>, :<span class="number">200</span>]</span><br><span class="line">newImg_2 = img[<span class="number">400</span>:<span class="number">650</span>, <span class="number">100</span>:<span class="number">500</span>]</span><br><span class="line"></span><br><span class="line">cv2.imshow(<span class="string">&quot;img&quot;</span>, img)</span><br><span class="line">cv2.imshow(<span class="string">&quot;newImg&quot;</span>, newImg)</span><br><span class="line">cv2.imshow(<span class="string">&quot;newImg&quot;</span>, newImg_2)</span><br><span class="line">cv2.waitKey(<span class="number">0</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="影像處理常用5函式"><a href="#影像處理常用5函式" class="headerlink" title="影像處理常用5函式"></a>影像處理常用5函式</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">img = cv2.imread(<span class="string">&quot;img/colorcolor.jpg&quot;</span>)</span><br><span class="line">img = cv2.resize(img, (<span class="number">0</span>, <span class="number">0</span>), fx=<span class="number">0.5</span>, fy=<span class="number">0.5</span>)</span><br><span class="line"><span class="comment">#將彩色的圖片轉換成灰階圖片</span></span><br><span class="line">gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)</span><br><span class="line"><span class="comment">#高斯模糊</span></span><br><span class="line">blur = cv2.GaussianBlur(img, (<span class="number">15</span>, <span class="number">15</span>), <span class="number">10</span>)</span><br><span class="line"><span class="comment">#找邊緣(跟旁邊的向素質差很多就會被認定成邊緣)-&gt;分數差最低150最高200，這裡就是邊緣</span></span><br><span class="line">canny = cv2.Canny(img, <span class="number">150</span>, <span class="number">200</span>)</span><br><span class="line"><span class="comment">#膨脹(線條變粗)，顆粒大小，膨脹次數</span></span><br><span class="line">kernel = np.ones((<span class="number">3</span>,<span class="number">3</span>), np.uint8)</span><br><span class="line">dilate = cv2.dilate(canny, kernel, iterations = <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">kernel_1 = np.ones((<span class="number">3</span>,<span class="number">3</span>), np.uint8)</span><br><span class="line">erode = cv2.erode(dilate, kernel_1, iterations = <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">cv2.imshow(<span class="string">&quot;newImg&quot;</span>, img)</span><br><span class="line">cv2.imshow(<span class="string">&quot;gray&quot;</span>, gray)</span><br><span class="line">cv2.imshow(<span class="string">&quot;blur&quot;</span>, blur)</span><br><span class="line">cv2.imshow(<span class="string">&quot;canny&quot;</span>, canny)</span><br><span class="line">cv2.imshow(<span class="string">&quot;dilate&quot;</span>, dilate)</span><br><span class="line">cv2.imshow(<span class="string">&quot;erode&quot;</span>, erode)</span><br><span class="line">cv2.waitKey(<span class="number">0</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://frafishen.github.io/2022/07/04/Learning_opencv/" data-id="cl55u8t1r0000e4c2ffzo87m4" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/opencv/" rel="tag">opencv</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/" rel="tag">python</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2022/06/29/Vue/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Vue</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">標籤</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/about/" rel="tag">about</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/" rel="tag">c++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode/" rel="tag">leetcode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/opencv/" rel="tag">opencv</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/programming/" rel="tag">programming</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/website/" rel="tag">website</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">標籤雲</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/about/" style="font-size: 10px;">about</a> <a href="/tags/c/" style="font-size: 10px;">c++</a> <a href="/tags/leetcode/" style="font-size: 10px;">leetcode</a> <a href="/tags/opencv/" style="font-size: 10px;">opencv</a> <a href="/tags/programming/" style="font-size: 20px;">programming</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/website/" style="font-size: 20px;">website</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">彙整</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/07/">七月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/06/">六月 2022</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/07/04/Learning_opencv/">入門opencv</a>
+          </li>
+        
+          <li>
+            <a href="/2022/06/29/Vue/">Vue</a>
+          </li>
+        
+          <li>
+            <a href="/2022/06/28/Module/">Module</a>
+          </li>
+        
+          <li>
+            <a href="/2022/06/27/Learning_leetcode/">Learning Leetcode Material</a>
+          </li>
+        
+          <li>
+            <a href="/2022/06/27/Learning_site/">Client-side Learning Material</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2022 Jenny Shen<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>
