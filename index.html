@@ -115,45 +115,6 @@
 
 
   
-    <article id="post-NLP-readbook-2" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2022/09/26/NLP-readbook-2/" class="article-date">
-  <time datetime="2022-09-26T01:32:56.000Z" itemprop="datePublished">2022-09-26</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2022/09/26/NLP-readbook-2/">NLP 工程師養成術 讀書心得 (2) - 隱馬可夫模型應用於中文分詞</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Hanlp 有提供基於隱馬可夫模型的中文分詞器 HMMSegmemnt</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://frafishen.github.io/2022/09/26/NLP-readbook-2/" data-id="cl8i3ye9r0000u8c2hanp0fw3" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/NLP/" rel="tag">NLP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/machine-learning/" rel="tag">machine learning</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/" rel="tag">python</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
     <article id="post-NLP-readBook-1" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2022/09/24/NLP-readBook-1/" class="article-date">
@@ -176,9 +137,10 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>前面三章主要是在講述何謂NLP，建構一些框架性的觀念，並在第三章中介紹了n元語法模型。<br>但有個硬傷: n元語法模型是 based on 已存在之語料庫進行搜索優先序，所以註定無法處理 OOV。<br>為了解決 OOV 的召回問題，我們會不同方式對新詞(句)進行標註，讓模型認識新詞彙。</p>
+        <p>前面三章主要是在講述何謂NLP，建構一些框架性的觀念，並在第三章中介紹了n元語法模型。<br>但有個硬傷: n元語法模型是 based o n 已存在之語料庫進行搜索優先序，所以註定無法處理 OOV。<br>為了解決 OOV 的召回問題，我們會不同方式對新詞(句)進行標註，讓模型認識新詞彙。</p>
 <p><strong>n元語法模型:</strong> 是一個能夠求一個句子中，最大機率切分的模型。n = 句子的長度理論上可以是無限大。<br><strong>OOV:</strong> out of volcabulary 超出表外的字<br><strong>召回:</strong> 將字詞收錄到字典中</p>
-<h2 id="Chapter-4-隱馬可夫模型與序列標註"><a href="#Chapter-4-隱馬可夫模型與序列標註" class="headerlink" title="Chapter 4 隱馬可夫模型與序列標註"></a>Chapter 4 <a target="_blank" rel="noopener" href="https://pansci.asia/archives/43586">隱馬可夫模型</a>與序列標註</h2><p>OOV 沒辦法被”n元語法模型”召回，是因為它的顆粒度是詞彙層級，阿 OOV 就不在詞彙典裡，所以一定要回到字元層級去進行重新認識<br>這個行為被稱為”序列標註”行為，其中隱馬可夫是最簡單的模型。</p>
+<h2 id="Chapter-4-隱馬可夫模型與序列標註"><a href="#Chapter-4-隱馬可夫模型與序列標註" class="headerlink" title="Chapter 4 隱馬可夫模型與序列標註"></a>Chapter 4 <a target="_blank" rel="noopener" href="https://pansci.asia/archives/43586">隱馬可夫模型</a>與序列標註</h2><p>Hanlp 有提供基於隱馬可夫模型的中文分詞器 HMMSegmemnt<br>下面是假設雨模型的理論</p>
+<p>OOV 沒辦法被”n元語法模型”召回，是因為它的顆粒度是詞彙層級，阿 OOV 就不在詞彙典裡，所以一定要回到字元層級去進行重新認識<br>這個行為被稱為”序列標註”行為，其中隱馬可夫是最簡單的模型。</p>
 <p><strong>馬可夫假設:</strong> 每個事件發生的機率，指跟前一個發生的事件有關系。(有點像貝氏)<br>很多事件串在一起就是<strong>馬可夫鏈</strong>。<br>在NLP中，事件 -&gt; 單詞，馬可夫模型 -&gt; 二語法模型。</p>
 <h3 id="隱馬可夫鏈的假設與結構"><a href="#隱馬可夫鏈的假設與結構" class="headerlink" title="隱馬可夫鏈的假設與結構"></a>隱馬可夫鏈的假設與結構</h3><p><strong>隱馬可夫鏈中有兩種序列: 觀測序列(x)、狀態序列(y)。</strong><br>由狀態可以由相對應的觀測推得。<br>隱馬可夫鏈所做的假設就是：<br>x 外界可見，y 外界不可見<br>(1) y[i] 會由觀察 x[i] 所推得，但實際上y長什麼樣子我們不一定知道。<br>(2) y[i] 取決於 y[i-1]。</p>
 <p>隱馬可夫模型利用三個要素模擬序列發生的過程<br>程式實作: p.156，這個是資料及完整的情況下</p>
@@ -608,6 +570,45 @@
 
 
   
+    <article id="post-當代應用心理學" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/07/09/%E7%95%B6%E4%BB%A3%E6%87%89%E7%94%A8%E5%BF%83%E7%90%86%E5%AD%B8/" class="article-date">
+  <time datetime="2022-07-08T18:03:38.000Z" itemprop="datePublished">2022-07-09</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/07/09/%E7%95%B6%E4%BB%A3%E6%87%89%E7%94%A8%E5%BF%83%E7%90%86%E5%AD%B8/">當代應用心理學</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="Ewant-SOS計畫2022：當代應用心理學"><a href="#Ewant-SOS計畫2022：當代應用心理學" class="headerlink" title="Ewant SOS計畫2022：當代應用心理學"></a>Ewant SOS計畫2022：當代應用心理學</h2><h5 id="授課老師：劉威德老師"><a href="#授課老師：劉威德老師" class="headerlink" title="授課老師：劉威德老師"></a>授課老師：劉威德老師</h5><p>Ewant：<a target="_blank" rel="noopener" href="https://reurl.cc/Rr59Wn">當代應用心理學：hackmd 筆記</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://frafishen.github.io/2022/07/09/%E7%95%B6%E4%BB%A3%E6%87%89%E7%94%A8%E5%BF%83%E7%90%86%E5%AD%B8/" data-id="cl5crq8xq0001xgc25czn645z" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/general-education/" rel="tag">general education</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
 
 
   <nav id="page-nav">
@@ -636,7 +637,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">標籤雲</h3>
     <div class="widget tagcloud">
-      <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/Github-Pages/" style="font-size: 10px;">Github-Pages</a> <a href="/tags/Kotlin/" style="font-size: 20px;">Kotlin</a> <a href="/tags/NLP/" style="font-size: 16.67px;">NLP</a> <a href="/tags/Vite/" style="font-size: 10px;">Vite</a> <a href="/tags/Vue3/" style="font-size: 13.33px;">Vue3</a> <a href="/tags/about/" style="font-size: 10px;">about</a> <a href="/tags/algorithm/" style="font-size: 10px;">algorithm</a> <a href="/tags/app/" style="font-size: 10px;">app</a> <a href="/tags/c/" style="font-size: 13.33px;">c++</a> <a href="/tags/data-science/" style="font-size: 10px;">data-science</a> <a href="/tags/front-end/" style="font-size: 10px;">front_end</a> <a href="/tags/general-education/" style="font-size: 13.33px;">general education</a> <a href="/tags/leetcode/" style="font-size: 10px;">leetcode</a> <a href="/tags/machine-learning/" style="font-size: 13.33px;">machine learning</a> <a href="/tags/opencv/" style="font-size: 10px;">opencv</a> <a href="/tags/programming/" style="font-size: 13.33px;">programming</a> <a href="/tags/python/" style="font-size: 16.67px;">python</a> <a href="/tags/website/" style="font-size: 13.33px;">website</a>
+      <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/Github-Pages/" style="font-size: 10px;">Github-Pages</a> <a href="/tags/Kotlin/" style="font-size: 20px;">Kotlin</a> <a href="/tags/NLP/" style="font-size: 15px;">NLP</a> <a href="/tags/Vite/" style="font-size: 10px;">Vite</a> <a href="/tags/Vue3/" style="font-size: 15px;">Vue3</a> <a href="/tags/about/" style="font-size: 10px;">about</a> <a href="/tags/algorithm/" style="font-size: 10px;">algorithm</a> <a href="/tags/app/" style="font-size: 10px;">app</a> <a href="/tags/c/" style="font-size: 15px;">c++</a> <a href="/tags/data-science/" style="font-size: 10px;">data-science</a> <a href="/tags/front-end/" style="font-size: 10px;">front_end</a> <a href="/tags/general-education/" style="font-size: 15px;">general education</a> <a href="/tags/leetcode/" style="font-size: 10px;">leetcode</a> <a href="/tags/machine-learning/" style="font-size: 10px;">machine learning</a> <a href="/tags/opencv/" style="font-size: 10px;">opencv</a> <a href="/tags/programming/" style="font-size: 15px;">programming</a> <a href="/tags/python/" style="font-size: 15px;">python</a> <a href="/tags/website/" style="font-size: 15px;">website</a>
     </div>
   </div>
 
@@ -658,10 +659,6 @@
       <ul>
         
           <li>
-            <a href="/2022/09/26/NLP-readbook-2/">NLP 工程師養成術 讀書心得 (2) - 隱馬可夫模型應用於中文分詞</a>
-          </li>
-        
-          <li>
             <a href="/2022/09/24/NLP-readBook-1/">NLP 工程師養成術 讀書心得 (1)</a>
           </li>
         
@@ -675,6 +672,10 @@
         
           <li>
             <a href="/2022/07/28/First-App/">First-App-(1)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/07/25/Kotlin-Bootcamp-4/">Kotlin-Bootcamp(4)</a>
           </li>
         
       </ul>
