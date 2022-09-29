@@ -172,11 +172,11 @@
 <li>bert的內部不是RNN，是一個transformer <ul>
 <li>內部是self attention，不考慮positional encoding的情況，token放在句首還是尾其實沒有區別</li>
 <li>self attention跟雙向RNN有同樣能力，可以先偷看過整個sequence，但特別的是輸入的type是同時處理計算token的，不需要一個算完才能算下一個</li>
-<li>以前用RNN發表過的paper已經全部被使用self-attention機制洗一輪了… by李宏毅教授<h4 id="“Masked-LM”-amp-“Next-sentence-prediction”-一起用，效果最好"><a href="#“Masked-LM”-amp-“Next-sentence-prediction”-一起用，效果最好" class="headerlink" title="“Masked LM” &amp; “Next sentence prediction” 一起用，效果最好"></a>“Masked LM” &amp; “Next sentence prediction” 一起用，效果最好</h4></li>
+<li>以前用RNN發表過的paper已經全部被使用self-attention機制洗一輪了… by李宏毅教授</li>
 </ul>
 </li>
 </ul>
-<h3 id="BERT怎麼用"><a href="#BERT怎麼用" class="headerlink" title="BERT怎麼用?"></a>BERT怎麼用?</h3><h4 id="Case-1"><a href="#Case-1" class="headerlink" title="Case 1"></a>Case 1</h4><ul>
+<h4 id="“Masked-LM”-amp-“Next-sentence-prediction”-一起用，效果最好"><a href="#“Masked-LM”-amp-“Next-sentence-prediction”-一起用，效果最好" class="headerlink" title="“Masked LM” &amp; “Next sentence prediction” 一起用，效果最好"></a>“Masked LM” &amp; “Next sentence prediction” 一起用，效果最好</h4><h3 id="BERT怎麼用"><a href="#BERT怎麼用" class="headerlink" title="BERT怎麼用?"></a>BERT怎麼用?</h3><h4 id="Case-1"><a href="#Case-1" class="headerlink" title="Case 1"></a>Case 1</h4><ul>
 <li>輸入一堆句子，輸出文章類別<ul>
 <li>在輸入的最前面加入[CLS]</li>
 <li>將輸出的embedding再丟入Linear Classifier (train from scratch)</li>
