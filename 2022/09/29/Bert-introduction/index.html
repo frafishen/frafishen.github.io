@@ -5,21 +5,23 @@
   
 
   
-  <title>NLP 工程師養成術 讀書心得 (1) - 隱馬可夫模型 | 沈倢妤的空間</title>
+  <title>NLP 模型探索 | 沈倢妤的空間</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="前面三章主要是在講述何謂NLP，建構一些框架性的觀念，並在第三章中介紹了n元語法模型。但有個硬傷: n元語法模型是 based o n 已存在之語料庫進行搜索優先序，所以註定無法處理 OOV。為了解決 OOV 的召回問題，我們會不同方式對新詞(句)進行標註，讓模型認識新詞彙。 n元語法模型: 是一個能夠求一個句子中，最大機率切分的模型。n &#x3D; 句子的長度理論上可以是無限大。OOV: out of">
+  <meta name="description" content="主要參考  李宏毅教授的影片說明 論文BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding  Contextualized Word Embedding 原本的 word embedding 基本上就是每個word會有一個自己的向量，也就是每個type(字)只會有個token(意思-&gt;">
 <meta property="og:type" content="article">
-<meta property="og:title" content="NLP 工程師養成術 讀書心得 (1) - 隱馬可夫模型">
-<meta property="og:url" content="https://frafishen.github.io/2022/09/24/NLP-readBook-1/index.html">
+<meta property="og:title" content="NLP 模型探索">
+<meta property="og:url" content="https://frafishen.github.io/2022/09/29/Bert-introduction/index.html">
 <meta property="og:site_name" content="沈倢妤的空間">
-<meta property="og:description" content="前面三章主要是在講述何謂NLP，建構一些框架性的觀念，並在第三章中介紹了n元語法模型。但有個硬傷: n元語法模型是 based o n 已存在之語料庫進行搜索優先序，所以註定無法處理 OOV。為了解決 OOV 的召回問題，我們會不同方式對新詞(句)進行標註，讓模型認識新詞彙。 n元語法模型: 是一個能夠求一個句子中，最大機率切分的模型。n &#x3D; 句子的長度理論上可以是無限大。OOV: out of">
+<meta property="og:description" content="主要參考  李宏毅教授的影片說明 論文BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding  Contextualized Word Embedding 原本的 word embedding 基本上就是每個word會有一個自己的向量，也就是每個type(字)只會有個token(意思-&gt;">
 <meta property="og:locale" content="zh_TW">
-<meta property="article:published_time" content="2022-09-24T02:21:26.000Z">
-<meta property="article:modified_time" content="2022-09-26T02:10:37.235Z">
+<meta property="article:published_time" content="2022-09-29T03:51:14.000Z">
+<meta property="article:modified_time" content="2022-09-29T23:30:56.447Z">
 <meta property="article:author" content="Jenny Shen">
 <meta property="article:tag" content="python">
 <meta property="article:tag" content="NLP">
 <meta property="article:tag" content="machine learning">
+<meta property="article:tag" content="Bert">
+<meta property="article:tag" content="ELMO">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternate" href="/atom.xml" title="沈倢妤的空間" type="application/atom+xml">
@@ -69,10 +71,10 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-NLP-readBook-1" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-Bert-introduction" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2022/09/24/NLP-readBook-1/" class="article-date">
-  <time datetime="2022-09-24T02:21:26.000Z" itemprop="datePublished">2022-09-24</time>
+    <a href="/2022/09/29/Bert-introduction/" class="article-date">
+  <time datetime="2022-09-29T03:51:14.000Z" itemprop="datePublished">2022-09-29</time>
 </a>
     
   </div>
@@ -83,7 +85,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      NLP 工程師養成術 讀書心得 (1) - 隱馬可夫模型
+      NLP 模型探索
     </h1>
   
 
@@ -91,29 +93,87 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>前面三章主要是在講述何謂NLP，建構一些框架性的觀念，並在第三章中介紹了n元語法模型。<br>但有個硬傷: n元語法模型是 based o n 已存在之語料庫進行搜索優先序，所以註定無法處理 OOV。<br>為了解決 OOV 的召回問題，我們會不同方式對新詞(句)進行標註，讓模型認識新詞彙。</p>
-<p><strong>n元語法模型:</strong> 是一個能夠求一個句子中，最大機率切分的模型。n = 句子的長度理論上可以是無限大。<br><strong>OOV:</strong> out of volcabulary 超出表外的字<br><strong>召回:</strong> 將字詞收錄到字典中</p>
-<h2 id="Chapter-4-隱馬可夫模型與序列標註"><a href="#Chapter-4-隱馬可夫模型與序列標註" class="headerlink" title="Chapter 4 隱馬可夫模型與序列標註"></a>Chapter 4 <a target="_blank" rel="noopener" href="https://pansci.asia/archives/43586">隱馬可夫模型</a>與序列標註</h2><p>Hanlp 有提供基於隱馬可夫模型的中文分詞器 HMMSegmemnt<br>下面是假設雨模型的理論</p>
-<p>OOV 沒辦法被”n元語法模型”召回，是因為它的顆粒度是詞彙層級，阿 OOV 就不在詞彙典裡，所以一定要回到字元層級去進行重新認識<br>這個行為被稱為”序列標註”行為，其中隱馬可夫是最簡單的模型。</p>
-<p><strong>馬可夫假設:</strong> 每個事件發生的機率，指跟前一個發生的事件有關系。(有點像貝氏)<br>很多事件串在一起就是<strong>馬可夫鏈</strong>。<br>在NLP中，事件 -&gt; 單詞，馬可夫模型 -&gt; 二語法模型。</p>
-<h3 id="隱馬可夫鏈的假設與結構"><a href="#隱馬可夫鏈的假設與結構" class="headerlink" title="隱馬可夫鏈的假設與結構"></a>隱馬可夫鏈的假設與結構</h3><p><strong>隱馬可夫鏈中有兩種序列: 觀測序列(x)、狀態序列(y)。</strong><br>由狀態可以由相對應的觀測推得。<br>隱馬可夫鏈所做的假設就是：<br>x 外界可見，y 外界不可見<br>(1) y[i] 會由觀察 x[i] 所推得，但實際上y長什麼樣子我們不一定知道。<br>(2) y[i] 取決於 y[i-1]。</p>
-<p>隱馬可夫模型利用三個要素模擬序列發生的過程<br>程式實作: p.156，這個是資料及完整的情況下</p>
-<h4 id="初始狀態機率向量"><a href="#初始狀態機率向量" class="headerlink" title="初始狀態機率向量"></a>初始狀態機率向量</h4><p>第一個字元是哪個字元的機率向量序列，其中序列合為1。</p>
-<h4 id="狀態轉移機率矩陣"><a href="#狀態轉移機率矩陣" class="headerlink" title="狀態轉移機率矩陣"></a>狀態轉移機率矩陣</h4><p>假設一個字串長度為N，則會產生一個N*N的狀態轉移機率矩陣。<br>為狀態i到j，所發生的機率。<br>因為有提到i只會跟i-1有關，所以需要有一個類似前綴的矩陣。</p>
-<h4 id="發射機率矩陣"><a href="#發射機率矩陣" class="headerlink" title="發射機率矩陣"></a>發射機率矩陣</h4><p>假設觀察x共有M種可能性，而y本身有N種，那決定x和y之後就會產生一個M*N的發射機率矩陣。<br>形象化: 將y[i]想像成不同的彩彈槍，x[i]為不同的彩彈。根據”發射機率矩陣”可以決定，拔哪支槍y[i]，而不同的槍，不同顏色的子彈也會有不同的比例x[i]。</p>
-<p>只要確定三元組，便可以確定隱馬可夫模型了。</p>
-<h3 id="樣本生成演算法"><a href="#樣本生成演算法" class="headerlink" title="樣本生成演算法"></a>樣本生成演算法</h3><p>考慮長T的樣本序列(字串)，生成過程就是沿著引馬可夫鏈走T步<br>程式實作: p.158</p>
-<h3 id="模型的訓練"><a href="#模型的訓練" class="headerlink" title="模型的訓練"></a>模型的訓練</h3><p>對模型來說，<br>觀測序列(x): 特徵資料，以這些資料去建立模型<br>狀態序列(y): 標籤資料，標準答案<br>因此，資料及有沒有標註y，就可以對應到我們應該要建立，監督式學習，或是非監督式學習。</p>
-<p>隱馬可夫鏈的參數是上面提到的三要素。<br>估計的程式實作於 p.159，用於資料集不完整，所以需要訓練模型，以進行推估</p>
-<p>p.164~p.170 主要在講狀態向前、搜尋的演算法實作</p>
-
+        <p>主要參考</p>
+<ol>
+<li>李宏毅教授的<a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=UYPa347-DdE">影片說明</a></li>
+<li>論文<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1810.04805.pdf">BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding</a></li>
+</ol>
+<h2 id="Contextualized-Word-Embedding"><a href="#Contextualized-Word-Embedding" class="headerlink" title="Contextualized Word Embedding"></a>Contextualized Word Embedding</h2><ul>
+<li>原本的 word embedding 基本上就是每個word會有一個自己的向量，也就是每個type(字)只會有個token(意思-&gt;向量)</li>
+<li>Contextualized 的技術就是讓同一個type，在句子中，會根據前後的type的token去判斷，應該自己是哪個token</li>
+</ul>
+<h2 id="ELMO"><a href="#ELMO" class="headerlink" title="ELMO"></a>ELMO</h2><ul>
+<li>ELMO 是基於 RNN 的模型<ul>
+<li>只需要收集一堆的句子，不需要特別去進行標籤</li>
+<li>訓練的點：下一個會出現的token是什麼</li>
+<li>正反都做一次，就能分析上下文了</li>
+<li>因為deep learning，所以會有很多層，所以分析出來，可能也會有很多個token的結果。ELMO的做法就是對每一層有一個參數(相對於超參數，是動態的，因為對於不同的問題，不同層的結果重要程度可能會不同)，對每一層加權，共同決定最後預測的token</li>
+</ul>
+</li>
+</ul>
+<h2 id="BERT"><a href="#BERT" class="headerlink" title="BERT"></a>BERT</h2><ul>
+<li>encoder of transformer 就是bert的network架構</li>
+<li>一般如果要transform一個transformer的話，就需要有一些東西pass過去，像是 translation, summerization之類的，但bert的邏輯，就是直接去transform transformer的encoder就可以了，所以不需要上label，直接丟句子進去就可以了</li>
+<li>運作邏輯就是給一串sequence，bert就會吐一串embedding的sequence出來</li>
+<li>中文如果利用bert的話，顆粒度用字等級的，會更為恰當，因為用詞做embedding的話，計算的維度會太大</li>
+<li><h3 id="BERT怎麼訓練的"><a href="#BERT怎麼訓練的" class="headerlink" title="BERT怎麼訓練的?"></a>BERT怎麼訓練的?</h3><h4 id="Masked-LM"><a href="#Masked-LM" class="headerlink" title="Masked LM"></a>Masked LM</h4></li>
+<li>隨機蓋掉裡面15%的字詞，用[MASK]代替，用克漏字的方式去訓練模型。</li>
+<li>每個被[MASK]的地方，就會產生embedding的vector，那這個vector再丟進一個Linear Multi-class classifier，去預測被[MASK]掉的是哪個詞彙。</li>
+<li>如果兩個詞彙田在同一個地方沒有違和感，那就代表他們語意差不多，也就表示出來的embedding會很相近<h4 id="Next-sentence-prediction"><a href="#Next-sentence-prediction" class="headerlink" title="Next sentence prediction"></a>Next sentence prediction</h4></li>
+<li>在兩個句子中間插入一個特殊的token，[SEP]，表示兩個句子的交界</li>
+<li>還有一個特殊的token，[CLS]，表示從這裡開始去做classification<ul>
+<li>從這裡出來的embedding，丟進Linear binary classifier(輸出yes or no)，要判斷的就是，這句話跟其他句話是不是應該要接再一起的。(屬不屬於上下文句子?)</li>
+</ul>
+</li>
+<li>bert的內部不是RNN，是一個transformer <ul>
+<li>內部是self attention，不考慮positional encoding的情況，token放在句首還是尾其實沒有區別</li>
+<li>self attention跟雙向RNN有同樣能力，可以先偷看過整個sequence，但特別的是輸入的type是同時處理計算token的，不需要一個算完才能算下一個</li>
+<li>以前用RNN發表過的paper已經全部被使用self-attention機制洗一輪了… by李宏毅教授<h4 id="“Masked-LM”-amp-“Next-sentence-prediction”-一起用，效果最好"><a href="#“Masked-LM”-amp-“Next-sentence-prediction”-一起用，效果最好" class="headerlink" title="“Masked LM” &amp; “Next sentence prediction” 一起用，效果最好"></a>“Masked LM” &amp; “Next sentence prediction” 一起用，效果最好</h4></li>
+</ul>
+</li>
+</ul>
+<h3 id="BERT怎麼用"><a href="#BERT怎麼用" class="headerlink" title="BERT怎麼用?"></a>BERT怎麼用?</h3><h4 id="Case-1"><a href="#Case-1" class="headerlink" title="Case 1"></a>Case 1</h4><ul>
+<li>輸入一堆句子，輸出文章類別<ul>
+<li>在輸入的最前面加入[CLS]</li>
+<li>將輸出的embedding再丟入Linear Classifier (train from scratch)</li>
+<li>然後就能預測丟入的句子1, 句子2, 句子3…屬於什麼類型(class)的文章</li>
+<li>應用：情緒分析、文本分類<h4 id="Case-2"><a href="#Case-2" class="headerlink" title="Case 2"></a>Case 2</h4></li>
+</ul>
+</li>
+<li>輸入單一句子，輸出每個字詞的類別<ul>
+<li> 在輸入的最前面加入[CLS]</li>
+<li> 將輸出的embedding再丟入Linear Classifier (每個字詞都會有embedding)</li>
+<li> 應用：slot filling<h4 id="Case-3"><a href="#Case-3" class="headerlink" title="Case 3"></a>Case 3</h4></li>
+</ul>
+</li>
+<li>輸入兩個句子，輸出判斷類別(成立/不成立/不知道)<ul>
+<li>輸入：[CLS]sen1[SEP]sen2</li>
+<li>應用：Natural Language Inference　-&gt; 根據前提，這個假設成不成立，或是不知道<h4 id="Case-4"><a href="#Case-4" class="headerlink" title="Case 4"></a>Case 4</h4></li>
+</ul>
+</li>
+<li>輸入一篇文章，跟問題，答案如果有出現在文章裡面，就能夠輸出答案<ul>
+<li>輸入：[CLS]question sequnce[SEP]document</li>
+<li>輸出：答案在document中的哪裏到哪裡</li>
+<li>文章裡的每個字詞都有embedding</li>
+<li>應用：Extraction-based Question Answering(QA), (eg, SQuAD)</li>
+</ul>
+</li>
+</ul>
+<h3 id="ERNIE"><a href="#ERNIE" class="headerlink" title="ERNIE"></a>ERNIE</h3><ul>
+<li>design for 中文的 BERT</li>
+</ul>
+<p>待續…</p>
+<!-- ## GPT
+- 參數很大
+- transformer的decoder
+-  -->
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://frafishen.github.io/2022/09/24/NLP-readBook-1/" data-id="cl8fbx24p0000moc2f4ugcu34" class="article-share-link">Share</a>
+      <a data-url="https://frafishen.github.io/2022/09/29/Bert-introduction/" data-id="cl8nmec9i0000s8c2dnzeb4x3" class="article-share-link">Share</a>
       
       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/NLP/" rel="tag">NLP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/machine-learning/" rel="tag">machine learning</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/" rel="tag">python</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Bert/" rel="tag">Bert</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ELMO/" rel="tag">ELMO</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/NLP/" rel="tag">NLP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/machine-learning/" rel="tag">machine learning</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/" rel="tag">python</a></li></ul>
 
     </footer>
   </div>
@@ -121,19 +181,10 @@
     
 <nav id="article-nav">
   
-    <a href="/2022/09/29/Bert-introduction/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          NLP 模型探索
-        
-      </div>
-    </a>
   
-  
-    <a href="/2022/08/27/Learning-AC-Algorithm/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2022/09/24/NLP-readBook-1/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">Learning AC Algorithm</div>
+      <div class="article-nav-title">NLP 工程師養成術 讀書心得 (1) - 隱馬可夫模型</div>
     </a>
   
 </nav>

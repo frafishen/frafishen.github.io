@@ -115,6 +115,117 @@
 
 
   
+    <article id="post-Bert-introduction" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/09/29/Bert-introduction/" class="article-date">
+  <time datetime="2022-09-29T03:51:14.000Z" itemprop="datePublished">2022-09-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/09/29/Bert-introduction/">NLP 模型探索</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>主要參考</p>
+<ol>
+<li>李宏毅教授的<a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=UYPa347-DdE">影片說明</a></li>
+<li>論文<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1810.04805.pdf">BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding</a></li>
+</ol>
+<h2 id="Contextualized-Word-Embedding"><a href="#Contextualized-Word-Embedding" class="headerlink" title="Contextualized Word Embedding"></a>Contextualized Word Embedding</h2><ul>
+<li>原本的 word embedding 基本上就是每個word會有一個自己的向量，也就是每個type(字)只會有個token(意思-&gt;向量)</li>
+<li>Contextualized 的技術就是讓同一個type，在句子中，會根據前後的type的token去判斷，應該自己是哪個token</li>
+</ul>
+<h2 id="ELMO"><a href="#ELMO" class="headerlink" title="ELMO"></a>ELMO</h2><ul>
+<li>ELMO 是基於 RNN 的模型<ul>
+<li>只需要收集一堆的句子，不需要特別去進行標籤</li>
+<li>訓練的點：下一個會出現的token是什麼</li>
+<li>正反都做一次，就能分析上下文了</li>
+<li>因為deep learning，所以會有很多層，所以分析出來，可能也會有很多個token的結果。ELMO的做法就是對每一層有一個參數(相對於超參數，是動態的，因為對於不同的問題，不同層的結果重要程度可能會不同)，對每一層加權，共同決定最後預測的token</li>
+</ul>
+</li>
+</ul>
+<h2 id="BERT"><a href="#BERT" class="headerlink" title="BERT"></a>BERT</h2><ul>
+<li>encoder of transformer 就是bert的network架構</li>
+<li>一般如果要transform一個transformer的話，就需要有一些東西pass過去，像是 translation, summerization之類的，但bert的邏輯，就是直接去transform transformer的encoder就可以了，所以不需要上label，直接丟句子進去就可以了</li>
+<li>運作邏輯就是給一串sequence，bert就會吐一串embedding的sequence出來</li>
+<li>中文如果利用bert的話，顆粒度用字等級的，會更為恰當，因為用詞做embedding的話，計算的維度會太大</li>
+<li><h3 id="BERT怎麼訓練的"><a href="#BERT怎麼訓練的" class="headerlink" title="BERT怎麼訓練的?"></a>BERT怎麼訓練的?</h3><h4 id="Masked-LM"><a href="#Masked-LM" class="headerlink" title="Masked LM"></a>Masked LM</h4></li>
+<li>隨機蓋掉裡面15%的字詞，用[MASK]代替，用克漏字的方式去訓練模型。</li>
+<li>每個被[MASK]的地方，就會產生embedding的vector，那這個vector再丟進一個Linear Multi-class classifier，去預測被[MASK]掉的是哪個詞彙。</li>
+<li>如果兩個詞彙田在同一個地方沒有違和感，那就代表他們語意差不多，也就表示出來的embedding會很相近<h4 id="Next-sentence-prediction"><a href="#Next-sentence-prediction" class="headerlink" title="Next sentence prediction"></a>Next sentence prediction</h4></li>
+<li>在兩個句子中間插入一個特殊的token，[SEP]，表示兩個句子的交界</li>
+<li>還有一個特殊的token，[CLS]，表示從這裡開始去做classification<ul>
+<li>從這裡出來的embedding，丟進Linear binary classifier(輸出yes or no)，要判斷的就是，這句話跟其他句話是不是應該要接再一起的。(屬不屬於上下文句子?)</li>
+</ul>
+</li>
+<li>bert的內部不是RNN，是一個transformer <ul>
+<li>內部是self attention，不考慮positional encoding的情況，token放在句首還是尾其實沒有區別</li>
+<li>self attention跟雙向RNN有同樣能力，可以先偷看過整個sequence，但特別的是輸入的type是同時處理計算token的，不需要一個算完才能算下一個</li>
+<li>以前用RNN發表過的paper已經全部被使用self-attention機制洗一輪了… by李宏毅教授<h4 id="“Masked-LM”-amp-“Next-sentence-prediction”-一起用，效果最好"><a href="#“Masked-LM”-amp-“Next-sentence-prediction”-一起用，效果最好" class="headerlink" title="“Masked LM” &amp; “Next sentence prediction” 一起用，效果最好"></a>“Masked LM” &amp; “Next sentence prediction” 一起用，效果最好</h4></li>
+</ul>
+</li>
+</ul>
+<h3 id="BERT怎麼用"><a href="#BERT怎麼用" class="headerlink" title="BERT怎麼用?"></a>BERT怎麼用?</h3><h4 id="Case-1"><a href="#Case-1" class="headerlink" title="Case 1"></a>Case 1</h4><ul>
+<li>輸入一堆句子，輸出文章類別<ul>
+<li>在輸入的最前面加入[CLS]</li>
+<li>將輸出的embedding再丟入Linear Classifier (train from scratch)</li>
+<li>然後就能預測丟入的句子1, 句子2, 句子3…屬於什麼類型(class)的文章</li>
+<li>應用：情緒分析、文本分類<h4 id="Case-2"><a href="#Case-2" class="headerlink" title="Case 2"></a>Case 2</h4></li>
+</ul>
+</li>
+<li>輸入單一句子，輸出每個字詞的類別<ul>
+<li> 在輸入的最前面加入[CLS]</li>
+<li> 將輸出的embedding再丟入Linear Classifier (每個字詞都會有embedding)</li>
+<li> 應用：slot filling<h4 id="Case-3"><a href="#Case-3" class="headerlink" title="Case 3"></a>Case 3</h4></li>
+</ul>
+</li>
+<li>輸入兩個句子，輸出判斷類別(成立/不成立/不知道)<ul>
+<li>輸入：[CLS]sen1[SEP]sen2</li>
+<li>應用：Natural Language Inference　-&gt; 根據前提，這個假設成不成立，或是不知道<h4 id="Case-4"><a href="#Case-4" class="headerlink" title="Case 4"></a>Case 4</h4></li>
+</ul>
+</li>
+<li>輸入一篇文章，跟問題，答案如果有出現在文章裡面，就能夠輸出答案<ul>
+<li>輸入：[CLS]question sequnce[SEP]document</li>
+<li>輸出：答案在document中的哪裏到哪裡</li>
+<li>文章裡的每個字詞都有embedding</li>
+<li>應用：Extraction-based Question Answering(QA), (eg, SQuAD)</li>
+</ul>
+</li>
+</ul>
+<h3 id="ERNIE"><a href="#ERNIE" class="headerlink" title="ERNIE"></a>ERNIE</h3><ul>
+<li>design for 中文的 BERT</li>
+</ul>
+<p>待續…</p>
+<!-- ## GPT
+- 參數很大
+- transformer的decoder
+-  -->
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://frafishen.github.io/2022/09/29/Bert-introduction/" data-id="cl8nmec9i0000s8c2dnzeb4x3" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Bert/" rel="tag">Bert</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ELMO/" rel="tag">ELMO</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/NLP/" rel="tag">NLP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/machine-learning/" rel="tag">machine learning</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/" rel="tag">python</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-NLP-readBook-1" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2022/09/24/NLP-readBook-1/" class="article-date">
@@ -204,7 +315,7 @@
 <details>
 <summary><font color=Blue>程式碼</font></summary>
 
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">build_fail</span><span class="params">(<span class="type">const</span> string &amp;a)</span></span>&#123;        <span class="comment">// build the fail function</span></span><br><span class="line">    </span><br><span class="line">    vector&lt;<span class="type">int</span>&gt; f&#123;<span class="number">0</span>,<span class="number">0</span>&#125;;</span><br><span class="line">    <span class="type">int</span> u = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; (<span class="type">int</span>)a.<span class="built_in">size</span>(); i++)&#123;</span><br><span class="line">        <span class="keyword">while</span>(u != <span class="number">0</span> &amp;&amp; a[i] != a[u])&#123;</span><br><span class="line">            u = f[u];       <span class="comment">//製作前綴表</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(a[i] == a[u])&#123;       <span class="comment">//紀錄最常相等前後綴字串大小(就是要右跳幾格)</span></span><br><span class="line">            u++;</span><br><span class="line">        &#125;</span><br><span class="line">        f.<span class="built_in">push_back</span>(u);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> f;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    string a, b;</span><br><span class="line">    cin &gt;&gt; a &gt;&gt; b;</span><br><span class="line">    <span class="type">const</span> <span class="keyword">auto</span> &amp;f = <span class="built_in">build_fail</span>(b);</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> u = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; (<span class="type">int</span>)a.<span class="built_in">size</span>(); i++)&#123;</span><br><span class="line">        <span class="keyword">while</span>(u != <span class="number">0</span> &amp;&amp; a[i] != b[u])&#123;</span><br><span class="line">            u = f[u];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(a[i] == b[u])&#123;</span><br><span class="line">            u++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(u == (<span class="type">int</span>)b.<span class="built_in">size</span>())&#123;</span><br><span class="line">            cout &lt;&lt;<span class="string">&quot;match found: &quot;</span> &lt;&lt; i - u + <span class="number">1</span> &lt;&lt; endl;</span><br><span class="line">            u = f[u];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">build_fail</span><span class="params">(<span class="type">const</span> string &amp;a)</span></span>&#123;        <span class="comment">// build the fail function</span></span><br><span class="line">    </span><br><span class="line">    vector&lt;<span class="type">int</span>&gt; f&#123;<span class="number">0</span>,<span class="number">0</span>&#125;; <span class="comment">//前綴不包含只有自己</span></span><br><span class="line">    <span class="type">int</span> u = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; (<span class="type">int</span>)a.<span class="built_in">size</span>(); i++)&#123;</span><br><span class="line">        <span class="keyword">while</span>(u != <span class="number">0</span> &amp;&amp; a[i] != a[u])&#123;</span><br><span class="line">            u = f[u];       <span class="comment">//製作前綴表</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(a[i] == a[u])&#123;       <span class="comment">//紀錄最常相等前後綴字串大小(就是要右跳幾格)</span></span><br><span class="line">            u++;</span><br><span class="line">        &#125;</span><br><span class="line">        f.<span class="built_in">push_back</span>(u);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> f;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    string a, b;</span><br><span class="line">    cin &gt;&gt; a &gt;&gt; b;</span><br><span class="line">    <span class="type">const</span> <span class="keyword">auto</span> &amp;f = <span class="built_in">build_fail</span>(b);</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> u = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; (<span class="type">int</span>)a.<span class="built_in">size</span>(); i++)&#123;</span><br><span class="line">        <span class="keyword">while</span>(u != <span class="number">0</span> &amp;&amp; a[i] != b[u])&#123;</span><br><span class="line">            u = f[u];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(a[i] == b[u])&#123;</span><br><span class="line">            u++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(u == (<span class="type">int</span>)b.<span class="built_in">size</span>())&#123;</span><br><span class="line">            cout &lt;&lt;<span class="string">&quot;match found: &quot;</span> &lt;&lt; i - u + <span class="number">1</span> &lt;&lt; endl;</span><br><span class="line">            u = <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 </details>
 
@@ -570,45 +681,6 @@
 
 
   
-    <article id="post-當代應用心理學" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2022/07/09/%E7%95%B6%E4%BB%A3%E6%87%89%E7%94%A8%E5%BF%83%E7%90%86%E5%AD%B8/" class="article-date">
-  <time datetime="2022-07-08T18:03:38.000Z" itemprop="datePublished">2022-07-09</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2022/07/09/%E7%95%B6%E4%BB%A3%E6%87%89%E7%94%A8%E5%BF%83%E7%90%86%E5%AD%B8/">當代應用心理學</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="Ewant-SOS計畫2022：當代應用心理學"><a href="#Ewant-SOS計畫2022：當代應用心理學" class="headerlink" title="Ewant SOS計畫2022：當代應用心理學"></a>Ewant SOS計畫2022：當代應用心理學</h2><h5 id="授課老師：劉威德老師"><a href="#授課老師：劉威德老師" class="headerlink" title="授課老師：劉威德老師"></a>授課老師：劉威德老師</h5><p>Ewant：<a target="_blank" rel="noopener" href="https://reurl.cc/Rr59Wn">當代應用心理學：hackmd 筆記</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://frafishen.github.io/2022/07/09/%E7%95%B6%E4%BB%A3%E6%87%89%E7%94%A8%E5%BF%83%E7%90%86%E5%AD%B8/" data-id="cl5crq8xq0001xgc25czn645z" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/general-education/" rel="tag">general education</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
 
 
   <nav id="page-nav">
@@ -627,7 +699,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">標籤</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Git/" rel="tag">Git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Github-Pages/" rel="tag">Github-Pages</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kotlin/" rel="tag">Kotlin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NLP/" rel="tag">NLP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vite/" rel="tag">Vite</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vue3/" rel="tag">Vue3</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/about/" rel="tag">about</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algorithm/" rel="tag">algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/app/" rel="tag">app</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/" rel="tag">c++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/data-science/" rel="tag">data-science</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/front-end/" rel="tag">front_end</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/general-education/" rel="tag">general education</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode/" rel="tag">leetcode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/machine-learning/" rel="tag">machine learning</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/opencv/" rel="tag">opencv</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/programming/" rel="tag">programming</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/website/" rel="tag">website</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bert/" rel="tag">Bert</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ELMO/" rel="tag">ELMO</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Git/" rel="tag">Git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Github-Pages/" rel="tag">Github-Pages</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kotlin/" rel="tag">Kotlin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NLP/" rel="tag">NLP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vite/" rel="tag">Vite</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vue3/" rel="tag">Vue3</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/about/" rel="tag">about</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algorithm/" rel="tag">algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/app/" rel="tag">app</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/" rel="tag">c++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/data-science/" rel="tag">data-science</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/front-end/" rel="tag">front_end</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/general-education/" rel="tag">general education</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode/" rel="tag">leetcode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/machine-learning/" rel="tag">machine learning</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/opencv/" rel="tag">opencv</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/programming/" rel="tag">programming</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/website/" rel="tag">website</a></li></ul>
     </div>
   </div>
 
@@ -637,7 +709,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">標籤雲</h3>
     <div class="widget tagcloud">
-      <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/Github-Pages/" style="font-size: 10px;">Github-Pages</a> <a href="/tags/Kotlin/" style="font-size: 20px;">Kotlin</a> <a href="/tags/NLP/" style="font-size: 15px;">NLP</a> <a href="/tags/Vite/" style="font-size: 10px;">Vite</a> <a href="/tags/Vue3/" style="font-size: 15px;">Vue3</a> <a href="/tags/about/" style="font-size: 10px;">about</a> <a href="/tags/algorithm/" style="font-size: 10px;">algorithm</a> <a href="/tags/app/" style="font-size: 10px;">app</a> <a href="/tags/c/" style="font-size: 15px;">c++</a> <a href="/tags/data-science/" style="font-size: 10px;">data-science</a> <a href="/tags/front-end/" style="font-size: 10px;">front_end</a> <a href="/tags/general-education/" style="font-size: 15px;">general education</a> <a href="/tags/leetcode/" style="font-size: 10px;">leetcode</a> <a href="/tags/machine-learning/" style="font-size: 10px;">machine learning</a> <a href="/tags/opencv/" style="font-size: 10px;">opencv</a> <a href="/tags/programming/" style="font-size: 15px;">programming</a> <a href="/tags/python/" style="font-size: 15px;">python</a> <a href="/tags/website/" style="font-size: 15px;">website</a>
+      <a href="/tags/Bert/" style="font-size: 10px;">Bert</a> <a href="/tags/ELMO/" style="font-size: 10px;">ELMO</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/Github-Pages/" style="font-size: 10px;">Github-Pages</a> <a href="/tags/Kotlin/" style="font-size: 20px;">Kotlin</a> <a href="/tags/NLP/" style="font-size: 16.67px;">NLP</a> <a href="/tags/Vite/" style="font-size: 10px;">Vite</a> <a href="/tags/Vue3/" style="font-size: 13.33px;">Vue3</a> <a href="/tags/about/" style="font-size: 10px;">about</a> <a href="/tags/algorithm/" style="font-size: 10px;">algorithm</a> <a href="/tags/app/" style="font-size: 10px;">app</a> <a href="/tags/c/" style="font-size: 13.33px;">c++</a> <a href="/tags/data-science/" style="font-size: 10px;">data-science</a> <a href="/tags/front-end/" style="font-size: 10px;">front_end</a> <a href="/tags/general-education/" style="font-size: 13.33px;">general education</a> <a href="/tags/leetcode/" style="font-size: 10px;">leetcode</a> <a href="/tags/machine-learning/" style="font-size: 13.33px;">machine learning</a> <a href="/tags/opencv/" style="font-size: 10px;">opencv</a> <a href="/tags/programming/" style="font-size: 13.33px;">programming</a> <a href="/tags/python/" style="font-size: 16.67px;">python</a> <a href="/tags/website/" style="font-size: 13.33px;">website</a>
     </div>
   </div>
 
@@ -659,6 +731,10 @@
       <ul>
         
           <li>
+            <a href="/2022/09/29/Bert-introduction/">NLP 模型探索</a>
+          </li>
+        
+          <li>
             <a href="/2022/09/24/NLP-readBook-1/">NLP 工程師養成術 讀書心得 (1) - 隱馬可夫模型</a>
           </li>
         
@@ -672,10 +748,6 @@
         
           <li>
             <a href="/2022/07/28/First-App/">First-App-(1)</a>
-          </li>
-        
-          <li>
-            <a href="/2022/07/25/Kotlin-Bootcamp-4/">Kotlin-Bootcamp(4)</a>
           </li>
         
       </ul>
