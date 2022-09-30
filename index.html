@@ -162,10 +162,10 @@
 <li><h3 id="BERT怎麼訓練的"><a href="#BERT怎麼訓練的" class="headerlink" title="BERT怎麼訓練的?"></a>BERT怎麼訓練的?</h3><h4 id="Masked-LM"><a href="#Masked-LM" class="headerlink" title="Masked LM"></a>Masked LM</h4></li>
 <li>隨機蓋掉裡面15%的字詞，用[MASK]代替，用克漏字的方式去訓練模型。</li>
 <li>每個被[MASK]的地方，就會產生embedding的vector，那這個vector再丟進一個Linear Multi-class classifier，去預測被[MASK]掉的是哪個詞彙。</li>
-<li>如果兩個詞彙田在同一個地方沒有違和感，那就代表他們語意差不多，也就表示出來的embedding會很相近<h4 id="Next-sentence-prediction"><a href="#Next-sentence-prediction" class="headerlink" title="Next sentence prediction"></a>Next sentence prediction</h4></li>
+<li>如果兩個詞彙填在同一個地方沒有違和感，那就代表他們語意差不多，也就表示出來的embedding會很相近<h4 id="Next-sentence-prediction"><a href="#Next-sentence-prediction" class="headerlink" title="Next sentence prediction"></a>Next sentence prediction</h4></li>
 <li>在兩個句子中間插入一個特殊的token，[SEP]，表示兩個句子的交界</li>
 <li>還有一個特殊的token，[CLS]，表示從這裡開始去做classification<ul>
-<li>從這裡出來的embedding，丟進Linear binary classifier(輸出yes or no)，要判斷的就是，這句話跟其他句話是不是應該要接再一起的。(屬不屬於上下文句子?)</li>
+<li>從這裡出來的embedding，丟進Linear binary classifier(輸出yes or no)，要判斷的就是，這句話跟其他句話是不是應該要接在一起的。(屬不屬於上下文句子?)</li>
 </ul>
 </li>
 <li>bert的內部不是RNN，是一個transformer <ul>
@@ -252,7 +252,7 @@
 <h2 id="Chapter-4-隱馬可夫模型與序列標註"><a href="#Chapter-4-隱馬可夫模型與序列標註" class="headerlink" title="Chapter 4 隱馬可夫模型與序列標註"></a>Chapter 4 <a target="_blank" rel="noopener" href="https://pansci.asia/archives/43586">隱馬可夫模型</a>與序列標註</h2><p>Hanlp 有提供基於隱馬可夫模型的中文分詞器 HMMSegmemnt<br>下面是假設雨模型的理論</p>
 <p>OOV 沒辦法被”n元語法模型”召回，是因為它的顆粒度是詞彙層級，阿 OOV 就不在詞彙典裡，所以一定要回到字元層級去進行重新認識<br>這個行為被稱為”序列標註”行為，其中隱馬可夫是最簡單的模型。</p>
 <p><strong>馬可夫假設:</strong> 每個事件發生的機率，指跟前一個發生的事件有關系。(有點像貝氏)<br>很多事件串在一起就是<strong>馬可夫鏈</strong>。<br>在NLP中，事件 -&gt; 單詞，馬可夫模型 -&gt; 二語法模型。</p>
-<h3 id="隱馬可夫鏈的假設與結構"><a href="#隱馬可夫鏈的假設與結構" class="headerlink" title="隱馬可夫鏈的假設與結構"></a>隱馬可夫鏈的假設與結構</h3><p><strong>隱馬可夫鏈中有兩種序列: 觀測序列(x)、狀態序列(y)。</strong><br>由狀態可以由相對應的觀測推得。<br>隱馬可夫鏈所做的假設就是：<br>x 外界可見，y 外界不可見<br>(1) y[i] 會由觀察 x[i] 所推得，但實際上y長什麼樣子我們不一定知道。<br>(2) y[i] 取決於 y[i-1]。</p>
+<h3 id="隱馬可夫鏈的假設與結構"><a href="#隱馬可夫鏈的假設與結構" class="headerlink" title="隱馬可夫鏈的假設與結構"></a>隱馬可夫鏈的假設與結構</h3><p><strong>隱馬可夫鏈中有兩種序列: 觀測序列(x)、狀態序列(y)。</strong><br>由狀態可以由相對應的觀測推得。<br>隱馬可夫鏈所做的假設就是：<br>x 外界可見，y 外界不可見<br>(1) x[i] 會由觀察 y[i] 所推得，但實際上y長什麼樣子我們不一定知道。<br>(2) y[i] 取決於 y[i-1]。</p>
 <p>隱馬可夫模型利用三個要素模擬序列發生的過程<br>程式實作: p.156，這個是資料及完整的情況下</p>
 <h4 id="初始狀態機率向量"><a href="#初始狀態機率向量" class="headerlink" title="初始狀態機率向量"></a>初始狀態機率向量</h4><p>第一個字元是哪個字元的機率向量序列，其中序列合為1。</p>
 <h4 id="狀態轉移機率矩陣"><a href="#狀態轉移機率矩陣" class="headerlink" title="狀態轉移機率矩陣"></a>狀態轉移機率矩陣</h4><p>假設一個字串長度為N，則會產生一個N*N的狀態轉移機率矩陣。<br>為狀態i到j，所發生的機率。<br>因為有提到i只會跟i-1有關，所以需要有一個類似前綴的矩陣。</p>

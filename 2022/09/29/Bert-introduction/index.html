@@ -15,7 +15,7 @@
 <meta property="og:description" content="主要參考  李宏毅教授的影片說明 論文BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding  Contextualized Word Embedding 原本的 word embedding 基本上就是每個word會有一個自己的向量，也就是每個type(字)只會有個token(意思-&gt;">
 <meta property="og:locale" content="zh_TW">
 <meta property="article:published_time" content="2022-09-29T03:51:14.000Z">
-<meta property="article:modified_time" content="2022-09-29T23:34:41.366Z">
+<meta property="article:modified_time" content="2022-09-30T02:39:38.921Z">
 <meta property="article:author" content="Jenny Shen">
 <meta property="article:tag" content="python">
 <meta property="article:tag" content="NLP">
@@ -119,10 +119,10 @@
 <li><h3 id="BERT怎麼訓練的"><a href="#BERT怎麼訓練的" class="headerlink" title="BERT怎麼訓練的?"></a>BERT怎麼訓練的?</h3><h4 id="Masked-LM"><a href="#Masked-LM" class="headerlink" title="Masked LM"></a>Masked LM</h4></li>
 <li>隨機蓋掉裡面15%的字詞，用[MASK]代替，用克漏字的方式去訓練模型。</li>
 <li>每個被[MASK]的地方，就會產生embedding的vector，那這個vector再丟進一個Linear Multi-class classifier，去預測被[MASK]掉的是哪個詞彙。</li>
-<li>如果兩個詞彙田在同一個地方沒有違和感，那就代表他們語意差不多，也就表示出來的embedding會很相近<h4 id="Next-sentence-prediction"><a href="#Next-sentence-prediction" class="headerlink" title="Next sentence prediction"></a>Next sentence prediction</h4></li>
+<li>如果兩個詞彙填在同一個地方沒有違和感，那就代表他們語意差不多，也就表示出來的embedding會很相近<h4 id="Next-sentence-prediction"><a href="#Next-sentence-prediction" class="headerlink" title="Next sentence prediction"></a>Next sentence prediction</h4></li>
 <li>在兩個句子中間插入一個特殊的token，[SEP]，表示兩個句子的交界</li>
 <li>還有一個特殊的token，[CLS]，表示從這裡開始去做classification<ul>
-<li>從這裡出來的embedding，丟進Linear binary classifier(輸出yes or no)，要判斷的就是，這句話跟其他句話是不是應該要接再一起的。(屬不屬於上下文句子?)</li>
+<li>從這裡出來的embedding，丟進Linear binary classifier(輸出yes or no)，要判斷的就是，這句話跟其他句話是不是應該要接在一起的。(屬不屬於上下文句子?)</li>
 </ul>
 </li>
 <li>bert的內部不是RNN，是一個transformer <ul>
