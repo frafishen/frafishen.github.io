@@ -5,19 +5,23 @@
   
 
   
-  <title>當代應用心理學 | 沈倢妤的空間</title>
+  <title>DLHLP 2020 (3) | 沈倢妤的空間</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Ewant SOS計畫2022：當代應用心理學授課老師：劉威德老師Ewant：當代應用心理學：hackmd 筆記">
+  <meta name="description" content="繼續記錄李宏毅老師的課。上一篇 [DLHLP 2020] BERT and its family - ELMo, BERT, GPT, XLNet, MASS, BART, UniLM, ELECTRA, and moreContextualized Word Embedding 原本的 word embedding 基本上就是每個word會有一個自己的向量，也就是每個type(字)只會有個tok">
 <meta property="og:type" content="article">
-<meta property="og:title" content="當代應用心理學">
-<meta property="og:url" content="https://frafishen.github.io/2022/07/09/%E7%95%B6%E4%BB%A3%E6%87%89%E7%94%A8%E5%BF%83%E7%90%86%E5%AD%B8/index.html">
+<meta property="og:title" content="DLHLP 2020 (3)">
+<meta property="og:url" content="https://frafishen.github.io/2023/02/05/DLHLP-2020-3/index.html">
 <meta property="og:site_name" content="沈倢妤的空間">
-<meta property="og:description" content="Ewant SOS計畫2022：當代應用心理學授課老師：劉威德老師Ewant：當代應用心理學：hackmd 筆記">
+<meta property="og:description" content="繼續記錄李宏毅老師的課。上一篇 [DLHLP 2020] BERT and its family - ELMo, BERT, GPT, XLNet, MASS, BART, UniLM, ELECTRA, and moreContextualized Word Embedding 原本的 word embedding 基本上就是每個word會有一個自己的向量，也就是每個type(字)只會有個tok">
 <meta property="og:locale" content="zh_TW">
-<meta property="article:published_time" content="2022-07-08T18:03:38.000Z">
-<meta property="article:modified_time" content="2022-07-08T18:05:22.528Z">
+<meta property="article:published_time" content="2023-02-04T17:36:21.000Z">
+<meta property="article:modified_time" content="2023-02-07T17:40:18.345Z">
 <meta property="article:author" content="Jenny Shen">
-<meta property="article:tag" content="general education">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="NLP">
+<meta property="article:tag" content="deep learning">
+<meta property="article:tag" content="DLHLP">
+<meta property="article:tag" content="Hung-yi Lee">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternate" href="/atom.xml" title="沈倢妤的空間" type="application/atom+xml">
@@ -67,10 +71,10 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-當代應用心理學" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-DLHLP-2020-3" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2022/07/09/%E7%95%B6%E4%BB%A3%E6%87%89%E7%94%A8%E5%BF%83%E7%90%86%E5%AD%B8/" class="article-date">
-  <time datetime="2022-07-08T18:03:38.000Z" itemprop="datePublished">2022-07-09</time>
+    <a href="/2023/02/05/DLHLP-2020-3/" class="article-date">
+  <time datetime="2023-02-04T17:36:21.000Z" itemprop="datePublished">2023-02-05</time>
 </a>
     
   </div>
@@ -81,7 +85,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      當代應用心理學
+      DLHLP 2020 (3)
     </h1>
   
 
@@ -89,15 +93,79 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="Ewant-SOS計畫2022：當代應用心理學"><a href="#Ewant-SOS計畫2022：當代應用心理學" class="headerlink" title="Ewant SOS計畫2022：當代應用心理學"></a>Ewant SOS計畫2022：當代應用心理學</h2><h5 id="授課老師：劉威德老師"><a href="#授課老師：劉威德老師" class="headerlink" title="授課老師：劉威德老師"></a>授課老師：劉威德老師</h5><p>Ewant：<a target="_blank" rel="noopener" href="https://reurl.cc/Rr59Wn">當代應用心理學：hackmd 筆記</a></p>
+        <p>繼續記錄李宏毅老師的課。<br><a href="https://frafishen.github.io/2023/02/01/DLHLP-2020-2/">上一篇</a></p>
+<h2 id="DLHLP-2020-BERT-and-its-family-ELMo-BERT-GPT-XLNet-MASS-BART-UniLM-ELECTRA-and-more"><a href="#DLHLP-2020-BERT-and-its-family-ELMo-BERT-GPT-XLNet-MASS-BART-UniLM-ELECTRA-and-more" class="headerlink" title="[DLHLP 2020] BERT and its family - ELMo, BERT, GPT, XLNet, MASS, BART, UniLM, ELECTRA, and more"></a><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=Bywo7m6ySlk">[DLHLP 2020] BERT and its family - ELMo, BERT, GPT, XLNet, MASS, BART, UniLM, ELECTRA, and more</a></h2><h2 id="Contextualized-Word-Embedding"><a href="#Contextualized-Word-Embedding" class="headerlink" title="Contextualized Word Embedding"></a>Contextualized Word Embedding</h2><ul>
+<li>原本的 word embedding 基本上就是每個word會有一個自己的向量，也就是每個type(字)只會有個token(意思-&gt;向量)</li>
+<li>Contextualized 的技術就是讓同一個type，在句子中，會根據前後的type的token去判斷，應該自己是哪個token</li>
+</ul>
+<h2 id="ELMO"><a href="#ELMO" class="headerlink" title="ELMO"></a>ELMO</h2><ul>
+<li>ELMO 是基於 RNN 的模型<ul>
+<li>只需要收集一堆的句子，不需要特別去進行標籤</li>
+<li>訓練的點：下一個會出現的token是什麼</li>
+<li>正反都做一次，就能分析上下文了</li>
+<li>因為deep learning，所以會有很多層，所以分析出來，可能也會有很多個token的結果。ELMO的做法就是對每一層有一個參數(相對於超參數，是動態的，因為對於不同的問題，不同層的結果重要程度可能會不同)，對每一層加權，共同決定最後預測的token</li>
+</ul>
+</li>
+</ul>
+<h2 id="BERT"><a href="#BERT" class="headerlink" title="BERT"></a>BERT</h2><ul>
+<li>encoder of transformer 就是bert的network架構</li>
+<li>一般如果要transform一個transformer的話，就需要有一些東西pass過去，像是 translation, summerization之類的，但bert的邏輯，就是直接去transform transformer的encoder就可以了，所以不需要上label，直接丟句子進去就可以了</li>
+<li>運作邏輯就是給一串sequence，bert就會吐一串embedding的sequence出來</li>
+<li>中文如果利用bert的話，顆粒度用字等級的，會更為恰當，因為用詞做embedding的話，計算的維度會太大</li>
+<li><h3 id="BERT怎麼訓練的"><a href="#BERT怎麼訓練的" class="headerlink" title="BERT怎麼訓練的?"></a>BERT怎麼訓練的?</h3><h4 id="Masked-LM"><a href="#Masked-LM" class="headerlink" title="Masked LM"></a>Masked LM</h4></li>
+<li>隨機蓋掉裡面15%的字詞，用[MASK]代替，用克漏字的方式去訓練模型。</li>
+<li>每個被[MASK]的地方，就會產生embedding的vector，那這個vector再丟進一個Linear Multi-class classifier，去預測被[MASK]掉的是哪個詞彙。</li>
+<li>如果兩個詞彙填在同一個地方沒有違和感，那就代表他們語意差不多，也就表示出來的embedding會很相近<h4 id="Next-sentence-prediction"><a href="#Next-sentence-prediction" class="headerlink" title="Next sentence prediction"></a>Next sentence prediction</h4></li>
+<li>在兩個句子中間插入一個特殊的token，[SEP]，表示兩個句子的交界</li>
+<li>還有一個特殊的token，[CLS]，表示從這裡開始去做classification<ul>
+<li>從這裡出來的embedding，丟進Linear binary classifier(輸出yes or no)，要判斷的就是，這句話跟其他句話是不是應該要接在一起的。(屬不屬於上下文句子?)</li>
+</ul>
+</li>
+<li>bert的內部不是RNN，是一個transformer <ul>
+<li>內部是self attention，不考慮positional encoding的情況，token放在句首還是尾其實沒有區別</li>
+<li>self attention跟雙向RNN有同樣能力，可以先偷看過整個sequence，但特別的是輸入的type是同時處理計算token的，不需要一個算完才能算下一個</li>
+<li>以前用RNN發表過的paper已經全部被使用self-attention機制洗一輪了… by李宏毅教授</li>
+</ul>
+</li>
+</ul>
+<h4 id="“Masked-LM”-amp-“Next-sentence-prediction”-一起用，效果最好"><a href="#“Masked-LM”-amp-“Next-sentence-prediction”-一起用，效果最好" class="headerlink" title="“Masked LM” &amp; “Next sentence prediction” 一起用，效果最好"></a>“Masked LM” &amp; “Next sentence prediction” 一起用，效果最好</h4><h3 id="BERT怎麼用"><a href="#BERT怎麼用" class="headerlink" title="BERT怎麼用?"></a>BERT怎麼用?</h3><h4 id="Case-1"><a href="#Case-1" class="headerlink" title="Case 1"></a>Case 1</h4><ul>
+<li>輸入一堆句子，輸出文章類別<ul>
+<li>在輸入的最前面加入[CLS]</li>
+<li>將輸出的embedding再丟入Linear Classifier (train from scratch)</li>
+<li>然後就能預測丟入的句子1, 句子2, 句子3…屬於什麼類型(class)的文章</li>
+<li>應用：情緒分析、文本分類<h4 id="Case-2"><a href="#Case-2" class="headerlink" title="Case 2"></a>Case 2</h4></li>
+</ul>
+</li>
+<li>輸入單一句子，輸出每個字詞的類別<ul>
+<li> 在輸入的最前面加入[CLS]</li>
+<li> 將輸出的embedding再丟入Linear Classifier (每個字詞都會有embedding)</li>
+<li> 應用：slot filling<h4 id="Case-3"><a href="#Case-3" class="headerlink" title="Case 3"></a>Case 3</h4></li>
+</ul>
+</li>
+<li>輸入兩個句子，輸出判斷類別(成立/不成立/不知道)<ul>
+<li>輸入：[CLS]sen1[SEP]sen2</li>
+<li>應用：Natural Language Inference　-&gt; 根據前提，這個假設成不成立，或是不知道<h4 id="Case-4"><a href="#Case-4" class="headerlink" title="Case 4"></a>Case 4</h4></li>
+</ul>
+</li>
+<li>輸入一篇文章，跟問題，答案如果有出現在文章裡面，就能夠輸出答案<ul>
+<li>輸入：[CLS]question sequnce[SEP]document</li>
+<li>輸出：答案在document中的哪裏到哪裡</li>
+<li>文章裡的每個字詞都有embedding</li>
+<li>應用：Extraction-based Question Answering(QA), (eg, SQuAD)</li>
+</ul>
+</li>
+</ul>
+<h3 id="ERNIE"><a href="#ERNIE" class="headerlink" title="ERNIE"></a>ERNIE</h3><ul>
+<li>design for 中文的 BERT</li>
+</ul>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://frafishen.github.io/2022/07/09/%E7%95%B6%E4%BB%A3%E6%87%89%E7%94%A8%E5%BF%83%E7%90%86%E5%AD%B8/" data-id="cl5crq8xq0001xgc25czn645z" class="article-share-link">Share</a>
+      <a data-url="https://frafishen.github.io/2023/02/05/DLHLP-2020-3/" data-id="clduizhhy00007kc2afgt47pd" class="article-share-link">Share</a>
       
       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/general-education/" rel="tag">general education</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/DLHLP/" rel="tag">DLHLP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Hung-yi-Lee/" rel="tag">Hung-yi Lee</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/NLP/" rel="tag">NLP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/deep-learning/" rel="tag">deep learning</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/" rel="tag">python</a></li></ul>
 
     </footer>
   </div>
@@ -105,19 +173,10 @@
     
 <nav id="article-nav">
   
-    <a href="/2022/07/15/Kotlin-Bootcamp(1)/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          Kotlin Bootcamp(1)
-        
-      </div>
-    </a>
   
-  
-    <a href="/2022/07/09/%E6%96%B0%E7%A7%91%E6%8A%80%E8%A1%8C%E5%8B%95%E5%AE%B6-%E8%B3%87%E6%96%99%E7%A7%91%E5%AD%B8%E5%AE%B6%E5%9F%B9%E8%A8%93%E7%8F%AD/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2023/02/02/DLHLP-2020-2/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">新科技行動家-資料科學家培訓班</div>
+      <div class="article-nav-title">DLHLP 2020 (2)</div>
     </a>
   
 </nav>

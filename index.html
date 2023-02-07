@@ -196,6 +196,178 @@
 
 
   
+    <article id="post-DLHLP-2020-3" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2023/02/05/DLHLP-2020-3/" class="article-date">
+  <time datetime="2023-02-04T17:36:21.000Z" itemprop="datePublished">2023-02-05</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2023/02/05/DLHLP-2020-3/">DLHLP 2020 (3)</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>繼續記錄李宏毅老師的課。<br><a href="https://frafishen.github.io/2023/02/01/DLHLP-2020-2/">上一篇</a></p>
+<h2 id="DLHLP-2020-BERT-and-its-family-ELMo-BERT-GPT-XLNet-MASS-BART-UniLM-ELECTRA-and-more"><a href="#DLHLP-2020-BERT-and-its-family-ELMo-BERT-GPT-XLNet-MASS-BART-UniLM-ELECTRA-and-more" class="headerlink" title="[DLHLP 2020] BERT and its family - ELMo, BERT, GPT, XLNet, MASS, BART, UniLM, ELECTRA, and more"></a><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=Bywo7m6ySlk">[DLHLP 2020] BERT and its family - ELMo, BERT, GPT, XLNet, MASS, BART, UniLM, ELECTRA, and more</a></h2><h2 id="Contextualized-Word-Embedding"><a href="#Contextualized-Word-Embedding" class="headerlink" title="Contextualized Word Embedding"></a>Contextualized Word Embedding</h2><ul>
+<li>原本的 word embedding 基本上就是每個word會有一個自己的向量，也就是每個type(字)只會有個token(意思-&gt;向量)</li>
+<li>Contextualized 的技術就是讓同一個type，在句子中，會根據前後的type的token去判斷，應該自己是哪個token</li>
+</ul>
+<h2 id="ELMO"><a href="#ELMO" class="headerlink" title="ELMO"></a>ELMO</h2><ul>
+<li>ELMO 是基於 RNN 的模型<ul>
+<li>只需要收集一堆的句子，不需要特別去進行標籤</li>
+<li>訓練的點：下一個會出現的token是什麼</li>
+<li>正反都做一次，就能分析上下文了</li>
+<li>因為deep learning，所以會有很多層，所以分析出來，可能也會有很多個token的結果。ELMO的做法就是對每一層有一個參數(相對於超參數，是動態的，因為對於不同的問題，不同層的結果重要程度可能會不同)，對每一層加權，共同決定最後預測的token</li>
+</ul>
+</li>
+</ul>
+<h2 id="BERT"><a href="#BERT" class="headerlink" title="BERT"></a>BERT</h2><ul>
+<li>encoder of transformer 就是bert的network架構</li>
+<li>一般如果要transform一個transformer的話，就需要有一些東西pass過去，像是 translation, summerization之類的，但bert的邏輯，就是直接去transform transformer的encoder就可以了，所以不需要上label，直接丟句子進去就可以了</li>
+<li>運作邏輯就是給一串sequence，bert就會吐一串embedding的sequence出來</li>
+<li>中文如果利用bert的話，顆粒度用字等級的，會更為恰當，因為用詞做embedding的話，計算的維度會太大</li>
+<li><h3 id="BERT怎麼訓練的"><a href="#BERT怎麼訓練的" class="headerlink" title="BERT怎麼訓練的?"></a>BERT怎麼訓練的?</h3><h4 id="Masked-LM"><a href="#Masked-LM" class="headerlink" title="Masked LM"></a>Masked LM</h4></li>
+<li>隨機蓋掉裡面15%的字詞，用[MASK]代替，用克漏字的方式去訓練模型。</li>
+<li>每個被[MASK]的地方，就會產生embedding的vector，那這個vector再丟進一個Linear Multi-class classifier，去預測被[MASK]掉的是哪個詞彙。</li>
+<li>如果兩個詞彙填在同一個地方沒有違和感，那就代表他們語意差不多，也就表示出來的embedding會很相近<h4 id="Next-sentence-prediction"><a href="#Next-sentence-prediction" class="headerlink" title="Next sentence prediction"></a>Next sentence prediction</h4></li>
+<li>在兩個句子中間插入一個特殊的token，[SEP]，表示兩個句子的交界</li>
+<li>還有一個特殊的token，[CLS]，表示從這裡開始去做classification<ul>
+<li>從這裡出來的embedding，丟進Linear binary classifier(輸出yes or no)，要判斷的就是，這句話跟其他句話是不是應該要接在一起的。(屬不屬於上下文句子?)</li>
+</ul>
+</li>
+<li>bert的內部不是RNN，是一個transformer <ul>
+<li>內部是self attention，不考慮positional encoding的情況，token放在句首還是尾其實沒有區別</li>
+<li>self attention跟雙向RNN有同樣能力，可以先偷看過整個sequence，但特別的是輸入的type是同時處理計算token的，不需要一個算完才能算下一個</li>
+<li>以前用RNN發表過的paper已經全部被使用self-attention機制洗一輪了… by李宏毅教授</li>
+</ul>
+</li>
+</ul>
+<h4 id="“Masked-LM”-amp-“Next-sentence-prediction”-一起用，效果最好"><a href="#“Masked-LM”-amp-“Next-sentence-prediction”-一起用，效果最好" class="headerlink" title="“Masked LM” &amp; “Next sentence prediction” 一起用，效果最好"></a>“Masked LM” &amp; “Next sentence prediction” 一起用，效果最好</h4><h3 id="BERT怎麼用"><a href="#BERT怎麼用" class="headerlink" title="BERT怎麼用?"></a>BERT怎麼用?</h3><h4 id="Case-1"><a href="#Case-1" class="headerlink" title="Case 1"></a>Case 1</h4><ul>
+<li>輸入一堆句子，輸出文章類別<ul>
+<li>在輸入的最前面加入[CLS]</li>
+<li>將輸出的embedding再丟入Linear Classifier (train from scratch)</li>
+<li>然後就能預測丟入的句子1, 句子2, 句子3…屬於什麼類型(class)的文章</li>
+<li>應用：情緒分析、文本分類<h4 id="Case-2"><a href="#Case-2" class="headerlink" title="Case 2"></a>Case 2</h4></li>
+</ul>
+</li>
+<li>輸入單一句子，輸出每個字詞的類別<ul>
+<li> 在輸入的最前面加入[CLS]</li>
+<li> 將輸出的embedding再丟入Linear Classifier (每個字詞都會有embedding)</li>
+<li> 應用：slot filling<h4 id="Case-3"><a href="#Case-3" class="headerlink" title="Case 3"></a>Case 3</h4></li>
+</ul>
+</li>
+<li>輸入兩個句子，輸出判斷類別(成立/不成立/不知道)<ul>
+<li>輸入：[CLS]sen1[SEP]sen2</li>
+<li>應用：Natural Language Inference　-&gt; 根據前提，這個假設成不成立，或是不知道<h4 id="Case-4"><a href="#Case-4" class="headerlink" title="Case 4"></a>Case 4</h4></li>
+</ul>
+</li>
+<li>輸入一篇文章，跟問題，答案如果有出現在文章裡面，就能夠輸出答案<ul>
+<li>輸入：[CLS]question sequnce[SEP]document</li>
+<li>輸出：答案在document中的哪裏到哪裡</li>
+<li>文章裡的每個字詞都有embedding</li>
+<li>應用：Extraction-based Question Answering(QA), (eg, SQuAD)</li>
+</ul>
+</li>
+</ul>
+<h3 id="ERNIE"><a href="#ERNIE" class="headerlink" title="ERNIE"></a>ERNIE</h3><ul>
+<li>design for 中文的 BERT</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://frafishen.github.io/2023/02/05/DLHLP-2020-3/" data-id="clduizhhy00007kc2afgt47pd" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/DLHLP/" rel="tag">DLHLP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Hung-yi-Lee/" rel="tag">Hung-yi Lee</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/NLP/" rel="tag">NLP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/deep-learning/" rel="tag">deep learning</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/" rel="tag">python</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-DLHLP-2020-2" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2023/02/02/DLHLP-2020-2/" class="article-date">
+  <time datetime="2023-02-02T10:50:05.000Z" itemprop="datePublished">2023-02-02</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2023/02/02/DLHLP-2020-2/">DLHLP 2020 (2)</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>繼續記錄李宏毅老師的課。<br><a href="https://frafishen.github.io/2023/02/01/DLHLP-2020-1/">上一篇</a><br><a href="https://frafishen.github.io/2023/02/05/DLHLP-2020-3/">下一篇</a></p>
+<h2 id="DLHLP-2020-BERT-and-its-family-Introduction-and-Fine-tune"><a href="#DLHLP-2020-BERT-and-its-family-Introduction-and-Fine-tune" class="headerlink" title="[DLHLP 2020] BERT and its family - Introduction and Fine-tune"></a><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=1_gRK9EIQpc">[DLHLP 2020] BERT and its family - Introduction and Fine-tune</a></h2><p><img src="https://i.imgur.com/qb7Frxi.png"></p>
+<ul>
+<li>一般的embedding就是只要token長的是一樣的，那embedding就會是一樣的。Contextualized word embedding則是會根據token的上下文，分別給token各自的embedding，所以就算都是”狗”，”小狗”和”單身狗”的”狗”的embedding也會不一樣。</li>
+<li>跟Bert相比，還有一些比較輕量的模型，邏輯上就是將有些原本需要學習的中間參數，直接寫死在模型裡面，但實驗結果發現其實結果沒有差很多。<ul>
+<li>Distill BERT</li>
+<li>Tiny BERT</li>
+<li>Mobile BERT</li>
+<li>Q8BERT</li>
+<li>ALBERT -&gt; 這個最常見到</li>
+</ul>
+</li>
+<li>除此之外，有有一些架構是將過程的self-attention的複雜度降低<ul>
+<li>reformer</li>
+<li>longformer</li>
+</ul>
+</li>
+<li>tranformer-XL: 在將架構延長的情況下，Level Recurrence with State Reuse</li>
+<li>假如說output是源自於input的某一個段落，根據<a href="https://frafishen.github.io/2023/02/01/DLHLP-2020-1/">上一篇</a>，會需要在document中，尋找start跟end的位置。<ul>
+<li><img src="https://i.imgur.com/JLPgSlC.png"></li>
+<li>sequence進到model之後，會產生一串對應到每個token的embedding，不同的specific task like find start or find end，就會有一個task specific vector，然後這些vector會去跟embedding做dot product，然後取softmax值(將內積出來的東西映射到0到1的區間)，最後取最大的值，說他就是start或是end。</li>
+<li>以上都是利用copy的方式，直接從輸入取材料到輸出。假如說想要輸出一個比較general的sequence，那就需要encoder和decoder。<ul>
+<li>encoder: 原本model會將輸入的token轉亂為embedding，這個就是encoder了</li>
+<li>decoder: task specific model就會是decoder，通常label data不多，所以會希望可以希望整個model可以先經過pre-train。做法可以將model輸出的embedding丟進task specific model之後，在丟回輸入，然後在進去model，周而復始。這樣就可以迴避掉decoder都沒有pre-train到的問題，利用encoder就可以了。</li>
+</ul>
+</li>
+<li>前面是因為可能沒有太多task specific的資料，所以沒有去fine-tune到decoder。假如說其實資料量夠，那將整個model都fine-tune，表現會更好，但相對的，每個task specific model都要存起來，就會很花記憶體，所以就有一種機制，是指將會不一樣的參數存起來，稱為adaptor，剩下的就共用一個model。</li>
+<li>在訓練model的過程中，會有一堆的layer，每一層可能會抽取不同的資訊去做訓練，可以將這些階段性的embedding去做weighted，然後加起來，在拿去task specific model裡面。其中，這個weighted的係數w們，都是可以用學習來的參數。</li>
+</ul>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://frafishen.github.io/2023/02/02/DLHLP-2020-2/" data-id="clduhktws00004kc2cuwd3pe2" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/DLHLP/" rel="tag">DLHLP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Hung-yi-Lee/" rel="tag">Hung-yi Lee</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/NLP/" rel="tag">NLP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/deep-learning/" rel="tag">deep learning</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/" rel="tag">python</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-DLHLP-2020-1" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2023/02/01/DLHLP-2020-1/" class="article-date">
@@ -218,7 +390,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>接下來的內容為李宏毅老師的DLHLP(Deep Learning and Human Language Processing)課程。<br>當中包含許多機器學習與深度學習的內容，我將其中有關於文字部分的NLP(Natural laguage processing)內容抓出來，並且做一個小整理。</p>
+        <p>接下來的內容為李宏毅老師的DLHLP(Deep Learning and Human Language Processing)課程。<br>當中包含許多機器學習與深度學習的內容，我將其中有關於文字部分的NLP(Natural laguage processing)內容抓出來，並且做一個小整理。<br><a href="https://frafishen.github.io/2023/02/02/DLHLP-2020-2/">下一篇</a></p>
 <h2 id="DLHLP-2020-Overview-of-NLP-Tasks"><a href="#DLHLP-2020-Overview-of-NLP-Tasks" class="headerlink" title="[DLHLP 2020] Overview of NLP Tasks"></a><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=tFBrqPPxWzE">[DLHLP 2020] Overview of NLP Tasks</a></h2><ul>
 <li>基本上現在大家直接說NLP的話，都是在指說處理文字的部分，也就是<ul>
 <li>sequence2sequence</li>
@@ -814,129 +986,6 @@
 
 
   
-    <article id="post-How-to-deploy-vite-app-to-github-pages" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2022/07/29/How-to-deploy-vite-app-to-github-pages/" class="article-date">
-  <time datetime="2022-07-29T15:21:52.000Z" itemprop="datePublished">2022-07-29</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2022/07/29/How-to-deploy-vite-app-to-github-pages/">How to Deploy Vite App to Github Pages</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>在製作專案–<a href="https://frafishen.github.io/NCCU-Mocking-Schedule/">選課小精靈</a>，我差點被deploy 階段給搞瘋，所以這裡先做一下筆記，以免之後想要撞豆腐。<br>為了避免之後腦殘的可能性，我從專案的初始設定開始。<br><br></p>
-<ol>
-<li><p>After typing the repo name, do nothing, just click the button of <em><strong>create repository</strong></em></p>
-</li>
-<li><p>Open terminal, like cmd, and then get into the folder that stores the original project</p>
-</li>
-<li><p>Then, some command lines would have to be executed. </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">git init    <span class="comment">#let our project be ready to be a repo</span></span><br><span class="line">git add .   <span class="comment">#add and dot must be sperated by a blank space. The command line is to put all the files in the project in stage.</span></span><br><span class="line">git commit -m <span class="string">&quot;The project name&quot;</span>    <span class="comment">#let all the files in stage be commited</span></span><br><span class="line">git branch -M main     <span class="comment">#create a branch that is main</span></span><br><span class="line">git remote add origin https://github.com/userName/projectName.git  <span class="comment">#userName and projectName have to be replaced</span></span><br><span class="line">git push -u origin main     <span class="comment">#let the commit be pushed to the branch</span></span><br></pre></td></tr></table></figure></li>
-<li><p>The steps previous are all for correctly newing a repo. Let’s get into the deploying phase. Open the “vite.config.js” file in the editor like vscode. The default setting would be like this：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; defineConfig &#125; <span class="keyword">from</span> <span class="string">&#x27;vite&#x27;</span></span><br><span class="line"><span class="keyword">import</span> vue <span class="keyword">from</span> <span class="string">&#x27;@vitejs/plugin-vue&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// https://vitejs.dev/config/</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title function_">defineConfig</span>(&#123;</span><br><span class="line">  <span class="attr">base</span>: <span class="string">&quot;/&quot;</span>,    <span class="comment">//or even no this line</span></span><br><span class="line">  <span class="attr">plugins</span>: [<span class="title function_">vue</span>()]</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-<p>just let the “base” contains the name of the repo, like this：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; defineConfig &#125; <span class="keyword">from</span> <span class="string">&#x27;vite&#x27;</span></span><br><span class="line"><span class="keyword">import</span> vue <span class="keyword">from</span> <span class="string">&#x27;@vitejs/plugin-vue&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// https://vitejs.dev/config/</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title function_">defineConfig</span>(&#123;</span><br><span class="line">  <span class="attr">base</span>: <span class="string">&quot;/repo_name/&quot;</span>,</span><br><span class="line">  <span class="attr">plugins</span>: [<span class="title function_">vue</span>()]</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></li>
-<li><p>Get back to cmd, and type</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">npm run build </span><br><span class="line"><span class="comment"># or </span></span><br><span class="line">yarn build</span><br><span class="line"><span class="comment"># depends on what tool is used</span></span><br></pre></td></tr></table></figure></li>
-</ol>
-<ol start="6">
-<li><p>The following illustration just the reason for the next command line. (can just type it)<br><br>After the building process, a file that named “dist” would secretly be created, and actually that is the file that contains the necessary information about where the github page should load the resourses from. However, if checking the “.gitignore” file, you would know that “dist” file would be ignored when committing the project. Thus, we have to especially add it into the stage, and then we are able to commit it.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git add dist -f</span><br></pre></td></tr></table></figure></li>
-<li><p>commit the change of adding “dist”</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git commit -m <span class="string">&quot;adding dist&quot;</span></span><br></pre></td></tr></table></figure></li>
-<li><p>create a branch that especially for the extra file, “dist”</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git subtree push --prefix dist origin  gh-pages</span><br></pre></td></tr></table></figure></li>
-<li><p>If there’s any change to the project, and we need to redeploy it.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">npm run build   <span class="comment">#yarn build </span></span><br><span class="line"></span><br><span class="line">git add . </span><br><span class="line">git commit -m <span class="string">&quot;description&quot;</span></span><br><span class="line">git push --all origin</span><br><span class="line">git add dist -f</span><br><span class="line">git commit -m <span class="string">&quot;adding dist&quot;</span></span><br><span class="line">git subtree push --prefix dist origin  gh-pages</span><br></pre></td></tr></table></figure></li>
-</ol>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://frafishen.github.io/2022/07/29/How-to-deploy-vite-app-to-github-pages/" data-id="cl66m94mc0000loc29fue7cz4" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Git/" rel="tag">Git</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Github-Pages/" rel="tag">Github-Pages</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Vite/" rel="tag">Vite</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Vue3/" rel="tag">Vue3</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-First-App" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2022/07/28/First-App/" class="article-date">
-  <time datetime="2022-07-27T21:41:00.000Z" itemprop="datePublished">2022-07-28</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2022/07/28/First-App/">First-App-(1)</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>為了<a target="_blank" rel="noopener" href="https://niicc.cilab.csie.ncu.edu.tw/">2022 全國大專院校智慧創新暨跨域整合創作競賽</a>，我們這組希望可以做一支結合python yolo、爬蟲、資料庫設計的APP。由於我們這組對於這次要設計的作品專案，其實都沒有實際做過，因此就分組各自學習，我的部分是負責APP的部分，以kotlin實現。</p>
-<p>我使用的學習材料為由Google提供的整套<a target="_blank" rel="noopener" href="https://developer.android.com/courses/android-basics-kotlin/course?hl=zh-tw">Android Kotlin 基本概念課程</a>。當然，由於我是APP小白，因此我還有另外學<a target="_blank" rel="noopener" href="https://learn.udacity.com/courses/ud9011">Kotlin</a> -&gt; 就是前面發的幾篇跟Kotlin有關的文章。</p>
-<p>(2022/9/12)後來我又發現另外一個中文教學網站，將所有APP簡易布局用非常淺顯易懂的方式表達。<a target="_blank" rel="noopener" href="https://tw-hkt.blogspot.com/2018/11/kotlin_57.html">HKT 線上教室</a><br><br></p>
-<h2 id="創建一隻APP"><a href="#創建一隻APP" class="headerlink" title="創建一隻APP"></a>創建一隻APP</h2><p>使用<a target="_blank" rel="noopener" href="https://developer.android.com/studio?gclid=Cj0KCQjwxIOXBhCrARIsAL1QFCb9-jjb-y26bsKAXB4hJQoVDsdW8iBFtwSc81SEAVz6Vz_fY3Gcz_oaAskMEALw_wcB&gclsrc=aw.ds">Android Studio</a> 進行開發。一開始的初始檔案就超級多，所以後面有好一大端時間是在學習那些檔案、標籤是在做什麼。</p>
-<h3 id="基本流程"><a href="#基本流程" class="headerlink" title="基本流程"></a>基本流程</h3><ul>
-<li>choose your project -&gt; <em>Empity Activity</em></li>
-<li>Android Studio 讓開發者有很多種閱讀專案的設定，先用Android </li>
-<li>一開始的APP，就是default 為Hello World!</li>
-<li>有幾個比較重要的檔案之後會在裡面遊蕩<ul>
-<li>app/src/main/java//MainActivity.kt: 主要寫APP功能的地方，定義物件，設定物件ID，以及寫listener function </li>
-<li>app/src/main/res/layout/activity_main.xml: 這個就是最底層，一打開畫面的layout，也就是MainActivity.kt 的輸出畫面。在這裡可以使用切分畫面，直接用拉的設計GUI</li>
-<li>app/src/main/res/drawable: 將所需要的image 都放在這裡</li>
-<li>app/src/main/res/values/strings.xml: 定義一些重要的字串，比如這隻APP叫什麼</li>
-<li>app/build.gradle: 設定版本資訊</li>
-</ul>
-</li>
-<li>在debug 或是compile &amp; run 的時候，有兩種方式: <ul>
-<li>使用AVD(Android Virtual Device)，選擇上面的bar: Tools&gt;Device Manager，create virtual device，選擇Nexus 5 或是Pixel XL，其他就挑自己喜歡的設定。老實說，我下載完之後有點後悔，因為我诶有想到這個虛擬機，下載完之後就直接佔了1.5G，假如手邊真的沒有Android Device再使用這個方法吧。</li>
-<li>使用Physical Device，就是手邊如果有實體安卓裝置的話，會方便很多。首先需要打開USB debugging，方法是要先打開裝置的Develpoer options，每個裝置不太一樣，可以查一下。最後就直接接線，就可以用</li>
-</ul>
-</li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://frafishen.github.io/2022/07/28/First-App/" data-id="cl6456naw00000kc26i7n6qla" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Kotlin/" rel="tag">Kotlin</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/app/" rel="tag">app</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
 
 
   <nav id="page-nav">
@@ -965,7 +1014,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">標籤雲</h3>
     <div class="widget tagcloud">
-      <a href="/tags/Bert/" style="font-size: 10px;">Bert</a> <a href="/tags/Computer/" style="font-size: 10px;">Computer</a> <a href="/tags/DLHLP/" style="font-size: 10px;">DLHLP</a> <a href="/tags/ELMO/" style="font-size: 10px;">ELMO</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/Github-Pages/" style="font-size: 10px;">Github-Pages</a> <a href="/tags/Hung-yi-Lee/" style="font-size: 10px;">Hung-yi Lee</a> <a href="/tags/Intel/" style="font-size: 10px;">Intel</a> <a href="/tags/Kotlin/" style="font-size: 20px;">Kotlin</a> <a href="/tags/NLP/" style="font-size: 20px;">NLP</a> <a href="/tags/Vite/" style="font-size: 10px;">Vite</a> <a href="/tags/Vue3/" style="font-size: 15px;">Vue3</a> <a href="/tags/about/" style="font-size: 15px;">about</a> <a href="/tags/algorithm/" style="font-size: 10px;">algorithm</a> <a href="/tags/app/" style="font-size: 10px;">app</a> <a href="/tags/c/" style="font-size: 15px;">c++</a> <a href="/tags/data-science/" style="font-size: 10px;">data-science</a> <a href="/tags/deep-learning/" style="font-size: 15px;">deep learning</a> <a href="/tags/front-end/" style="font-size: 10px;">front_end</a> <a href="/tags/general-education/" style="font-size: 15px;">general education</a> <a href="/tags/leetcode/" style="font-size: 10px;">leetcode</a> <a href="/tags/machine-learning/" style="font-size: 15px;">machine learning</a> <a href="/tags/opencv/" style="font-size: 10px;">opencv</a> <a href="/tags/paper/" style="font-size: 10px;">paper</a> <a href="/tags/programming/" style="font-size: 15px;">programming</a> <a href="/tags/python/" style="font-size: 20px;">python</a> <a href="/tags/website/" style="font-size: 15px;">website</a>
+      <a href="/tags/Bert/" style="font-size: 10px;">Bert</a> <a href="/tags/Computer/" style="font-size: 10px;">Computer</a> <a href="/tags/DLHLP/" style="font-size: 14px;">DLHLP</a> <a href="/tags/ELMO/" style="font-size: 10px;">ELMO</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/Github-Pages/" style="font-size: 10px;">Github-Pages</a> <a href="/tags/Hung-yi-Lee/" style="font-size: 14px;">Hung-yi Lee</a> <a href="/tags/Intel/" style="font-size: 10px;">Intel</a> <a href="/tags/Kotlin/" style="font-size: 18px;">Kotlin</a> <a href="/tags/NLP/" style="font-size: 20px;">NLP</a> <a href="/tags/Vite/" style="font-size: 10px;">Vite</a> <a href="/tags/Vue3/" style="font-size: 12px;">Vue3</a> <a href="/tags/about/" style="font-size: 12px;">about</a> <a href="/tags/algorithm/" style="font-size: 10px;">algorithm</a> <a href="/tags/app/" style="font-size: 10px;">app</a> <a href="/tags/c/" style="font-size: 12px;">c++</a> <a href="/tags/data-science/" style="font-size: 10px;">data-science</a> <a href="/tags/deep-learning/" style="font-size: 16px;">deep learning</a> <a href="/tags/front-end/" style="font-size: 10px;">front_end</a> <a href="/tags/general-education/" style="font-size: 12px;">general education</a> <a href="/tags/leetcode/" style="font-size: 10px;">leetcode</a> <a href="/tags/machine-learning/" style="font-size: 12px;">machine learning</a> <a href="/tags/opencv/" style="font-size: 10px;">opencv</a> <a href="/tags/paper/" style="font-size: 10px;">paper</a> <a href="/tags/programming/" style="font-size: 12px;">programming</a> <a href="/tags/python/" style="font-size: 20px;">python</a> <a href="/tags/website/" style="font-size: 12px;">website</a>
     </div>
   </div>
 
@@ -987,6 +1036,14 @@
       <ul>
         
           <li>
+            <a href="/2023/02/05/DLHLP-2020-3/">DLHLP 2020 (3)</a>
+          </li>
+        
+          <li>
+            <a href="/2023/02/02/DLHLP-2020-2/">DLHLP 2020 (2)</a>
+          </li>
+        
+          <li>
             <a href="/2023/02/01/DLHLP-2020-1/">DLHLP 2020 (1)</a>
           </li>
         
@@ -996,14 +1053,6 @@
         
           <li>
             <a href="/2022/10/18/20th-birthday/">20 Year Old Birthday</a>
-          </li>
-        
-          <li>
-            <a href="/2022/10/09/NLP-paper-1/">NLP論文們的小簡介(選擇困難症發作)</a>
-          </li>
-        
-          <li>
-            <a href="/2022/09/29/Bert-introduction/">NLP 模型探索</a>
           </li>
         
       </ul>
