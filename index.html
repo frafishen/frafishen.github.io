@@ -221,10 +221,17 @@
         <h2 id="Step-1-安裝virtualenv"><a href="#Step-1-安裝virtualenv" class="headerlink" title="Step 1: 安裝virtualenv"></a>Step 1: 安裝virtualenv</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip3 install virtualenv</span><br></pre></td></tr></table></figure>
 <h2 id="Step-2：建立虛擬環境"><a href="#Step-2：建立虛擬環境" class="headerlink" title="Step 2：建立虛擬環境"></a>Step 2：建立虛擬環境</h2><p>下面virtualenv是虛擬機的指令，env01是虛擬環境的名字。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">virtualenv env01</span><br></pre></td></tr></table></figure>
+<p>如果想要建立的是有特殊版本的python環境</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">virtualenv -p python3.8 env01</span><br></pre></td></tr></table></figure>
 <h2 id="Step-3：虛擬環境中啟動及安裝所需套件"><a href="#Step-3：虛擬環境中啟動及安裝所需套件" class="headerlink" title="Step 3：虛擬環境中啟動及安裝所需套件"></a>Step 3：虛擬環境中啟動及安裝所需套件</h2><p>啟動，之後可以就在裡面，安裝獨立的環境。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">activate</span><br></pre></td></tr></table></figure>
 <h2 id="Step-4：離開虛擬環境"><a href="#Step-4：離開虛擬環境" class="headerlink" title="Step 4：離開虛擬環境"></a>Step 4：離開虛擬環境</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">deactivate</span><br></pre></td></tr></table></figure>
 <h2 id="Step-5-在vscode中讓ipynb使用虛擬環境"><a href="#Step-5-在vscode中讓ipynb使用虛擬環境" class="headerlink" title="Step 5: 在vscode中讓ipynb使用虛擬環境"></a>Step 5: 在vscode中讓ipynb使用虛擬環境</h2><p>按下右邊的python版本，那邊可以選擇不同的kernel<br><img src="https://i.imgur.com/Y7rUmRD.png"></p>
+<h2 id="Step-6-建立需要的開發環境"><a href="#Step-6-建立需要的開發環境" class="headerlink" title="Step 6: 建立需要的開發環境"></a>Step 6: 建立需要的開發環境</h2><p>假如說想要一次安裝很多package的話，可以開一個requirements.txt，然後將需求像下面這樣填進去</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">numpy&lt;=1.19.2</span><br><span class="line">scipy==1.4.1</span><br><span class="line">pandas==1.1.5</span><br><span class="line">matplotlib==3.2.2</span><br><span class="line">seaborn==0.11.2</span><br><span class="line">scikit-learn==0.24.2</span><br><span class="line">keras==2.6.0</span><br><span class="line">pydot==1.4.2</span><br><span class="line">opencv-python==4.1.2.30</span><br><span class="line">pillow==7.1.2</span><br><span class="line">jupyterlab==3.2.0</span><br><span class="line">torch</span><br><span class="line">tqdm</span><br></pre></td></tr></table></figure>
+<p>然後再執行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install -r requirements.txt</span><br></pre></td></tr></table></figure>
+<p>就會全部裝好啦</p>
 
       
     </div>
