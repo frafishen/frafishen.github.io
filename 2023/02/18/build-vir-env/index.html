@@ -16,7 +16,7 @@
 <meta property="og:locale" content="zh_TW">
 <meta property="og:image" content="https://i.imgur.com/Y7rUmRD.png">
 <meta property="article:published_time" content="2023-02-18T03:49:04.000Z">
-<meta property="article:modified_time" content="2023-02-18T16:57:17.568Z">
+<meta property="article:modified_time" content="2023-02-18T17:00:06.042Z">
 <meta property="article:author" content="Jenny Shen">
 <meta property="article:tag" content="virtualenv">
 <meta name="twitter:card" content="summary">
@@ -100,7 +100,7 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> env01/Scripts</span><br><span class="line">activate</span><br></pre></td></tr></table></figure>
 <h2 id="Step-4：離開虛擬環境"><a href="#Step-4：離開虛擬環境" class="headerlink" title="Step 4：離開虛擬環境"></a>Step 4：離開虛擬環境</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">deactivate</span><br></pre></td></tr></table></figure>
 <h2 id="Step-5-在vscode中讓ipynb使用虛擬環境"><a href="#Step-5-在vscode中讓ipynb使用虛擬環境" class="headerlink" title="Step 5: 在vscode中讓ipynb使用虛擬環境"></a>Step 5: 在vscode中讓ipynb使用虛擬環境</h2><p>按下右邊的python版本，那邊可以選擇不同的kernel<br><img src="https://i.imgur.com/Y7rUmRD.png"></p>
-<h2 id="Step-6-建立需要的開發環境"><a href="#Step-6-建立需要的開發環境" class="headerlink" title="Step 6: 建立需要的開發環境"></a>Step 6: 建立需要的開發環境</h2><p>假如說想要一次安裝很多package的話，可以開一個requirements.txt，然後將需求像下面這樣填進去</p>
+<h2 id="Step-6-建立需要的開發環境"><a href="#Step-6-建立需要的開發環境" class="headerlink" title="Step 6: 建立需要的開發環境"></a>Step 6: 建立需要的開發環境</h2><p>假如說想要一次安裝很多package的話，可以開一個requirements.txt，然後將需求像下面這樣填進去。<br>將requirements.txt放在Scripts，這樣在打開虛體環境的情況下，就不用再特別跑出去了。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">numpy&lt;=1.19.2</span><br><span class="line">scipy==1.4.1</span><br><span class="line">pandas==1.1.5</span><br><span class="line">matplotlib==3.2.2</span><br><span class="line">seaborn==0.11.2</span><br><span class="line">scikit-learn==0.24.2</span><br><span class="line">keras==2.6.0</span><br><span class="line">pydot==1.4.2</span><br><span class="line">opencv-python==4.1.2.30</span><br><span class="line">pillow==7.1.2</span><br><span class="line">jupyterlab==3.2.0</span><br><span class="line">torch</span><br><span class="line">tqdm</span><br></pre></td></tr></table></figure>
 <p>然後再執行</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install -r requirements.txt</span><br></pre></td></tr></table></figure>
